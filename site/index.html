@@ -1017,26 +1017,22 @@ Report which run? [1-1] <span class="k">1</span>
   </div>
   <div class="asphalt card term">
     <div class="strip"><span class="pre"><span class="d">$</span> npx backseat-ai init</span><button class="tag" type="button" data-copy>COPY</button></div>
-<!-- PLACEHOLDER: the lines below are `init my-agent --starter` as recorded
-     2026-10-12 inside the repo, before backseat-ai was on npm and before `init`'s gate line spelled `node cli.ts --drive`. Re-record outside the repo once the package is
-     published and replace this <pre> with what init prints; see site-src/README.md. -->
-<pre><b>created   package.json — my-agent
-updated   scripts.drive — node cli.ts --drive
-updated   scripts.backseat — node cli.ts
+<pre><span class="cut">…</span>
+<b>created   package.json — my-agent
 updated   scripts.typecheck — tsc</b>
-<span class="p">$ pnpm add backseat-ai@workspace:* xstate@^5.32.6 zod@^4.5.4</span>
+<span class="p">$ npm install backseat-ai@^0.1.0 xstate@^5.32.6 zod@^4.5.4</span>
 <span class="cut">…</span>
 <b>updated   dependencies — backseat-ai xstate zod</b>
-<span class="p">$ pnpm add -D typescript@^7.0.2 @types/node@^26.4.1</span>
+<span class="p">$ npm install -D typescript@^7.0.2 typescript5@npm:typescript@^5.9.3 @types/node@^26.4.1</span>
 <span class="cut">…</span>
-<b>updated   devDependencies — typescript @types/node
+<b>updated   devDependencies — typescript typescript5 @types/node
 created   tsconfig.json
 created   cli.ts
 created   my-agent.ts — the smallest machine: one move, then finished
 created   machines.ts — registers my-agent
-ok        npm run -s drive -- — fronts my-agent</b>
+ok        node cli.ts --drive — fronts my-agent</b>
 
-<span class="k">Set up.</span> <b>Start a machine with `npm run -s drive -- create &lt;machine&gt;`; lint with `npm run backseat -- lint`.</b></pre>
+<span class="k">Set up.</span> <b>Start a machine with `node cli.ts --drive create &lt;machine&gt;`; lint with `node cli.ts lint`.</b></pre>
   </div>
   <div class="install"><a class="btn" href="https://github.com/pottedmeat/backseat-ai">GitHub →</a></div>
 </div></section>

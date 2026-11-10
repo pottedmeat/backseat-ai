@@ -1,19 +1,14 @@
-# Recorded from `pnpm pack` of backseat-ai 0.1.0 before it was published, so the tarball is installed first; the package manager's own output is cut to …
-
-$ npm install ../backseat-ai-0.1.0.tgz
-# started 2026-11-09T20:04:19Z, exit 0
-
-…
+# Recorded from the published backseat-ai 0.1.0 in an empty directory named my-agent; the package manager's own output is cut to …
 
 $ npx backseat-ai init --starter
-# started 2026-11-09T20:04:19Z, exit 0
+# started 2026-11-10T17:57:29Z, exit 0
 
-updated   package.json name — my-agent; every run records the project by it
-updated   package.json type — module; the catalog is an ES module
-updated   scripts.typecheck — tsc
-$ npm install xstate@^5.32.6 zod@^4.5.4
 …
-updated   dependencies — xstate zod
+created   package.json — my-agent
+updated   scripts.typecheck — tsc
+$ npm install backseat-ai@^0.1.0 xstate@^5.32.6 zod@^4.5.4
+…
+updated   dependencies — backseat-ai xstate zod
 $ npm install -D typescript@^7.0.2 typescript5@npm:typescript@^5.9.3 @types/node@^26.4.1
 …
 updated   devDependencies — typescript typescript5 @types/node
@@ -26,7 +21,7 @@ ok        node cli.ts --drive — fronts my-agent
 Set up. Start a machine with `node cli.ts --drive create <machine>`; lint with `node cli.ts lint`.
 
 $ cat cli.ts
-# started 2026-11-09T20:04:21Z, exit 0
+# started 2026-11-10T17:57:32Z, exit 0
 
 // This project's front for its machines: `node cli.ts --drive` is the agent's tool, `node cli.ts` a person's.
 // The catalog is named here and never imported, so a run can pin it before anything loads it.
@@ -35,7 +30,7 @@ import { cli } from 'backseat-ai/cli'
 await cli(new URL('./machines.ts', import.meta.url))
 
 $ cat machines.ts
-# started 2026-11-09T20:04:21Z, exit 0
+# started 2026-11-10T17:57:32Z, exit 0
 
 import { myAgent } from './my-agent.ts'
 
@@ -45,7 +40,7 @@ export default {
 }
 
 $ cat my-agent.ts
-# started 2026-11-09T20:04:21Z, exit 0
+# started 2026-11-10T17:57:32Z, exit 0
 
 import { backseat } from 'backseat-ai'
 
@@ -65,9 +60,9 @@ export const myAgent = backseat().createMachine({
 })
 
 $ node cli.ts --drive create my-agent
-# started 2026-11-09T20:04:21Z, exit 0
+# started 2026-11-10T17:57:32Z, exit 0
 
-Actor `0cd7dd22-c305-4beb-88b3-659a983e3f1f` is running `my-agent`.
+Actor `8b28f092-25ed-4448-9b4f-497bd053ff98` is running `my-agent`.
 
 Do the work this machine is for, then finish.
 
@@ -82,14 +77,14 @@ Do the work this machine is for, then finish.
 Every response tells you what you can send next: the states you can reach from here, and under each the event and the payload that must be sent to reach it. Read each one before the next call, and send only an event it lists. A move shown to you whole is named alone on later responses in the same state, until it changes; `node cli.ts --drive describe <actorId> <event.type>` prints it whole again. Every payload passes through your shell, where a quote or apostrophe in free text will eventually break the call before the tool sees it. Pass `-` in the payload's place and feed the JSON on stdin instead — `node cli.ts --drive send <actorId> <event.type> - <<'JSON'`, with the delimiter quoted exactly as shown — and nothing in it is re-parsed.
 
 ---
-0cd7dd22-c305-4beb-88b3-659a983e3f1f · at start · active
+8b28f092-25ed-4448-9b4f-497bd053ff98 · at start · active
 
-$ node cli.ts --drive send 0cd7dd22-c305-4beb-88b3-659a983e3f1f go
-# started 2026-11-09T20:04:21Z, exit 0
+$ node cli.ts --drive send 8b28f092-25ed-4448-9b4f-497bd053ff98 go
+# started 2026-11-10T17:57:32Z, exit 0
 
 Tell whoever asked for this what was done. The run ends here.
 
 This actor is done. Nothing more can be sent.
 
 ---
-0cd7dd22-c305-4beb-88b3-659a983e3f1f · at done · done
+8b28f092-25ed-4448-9b4f-497bd053ff98 · at done · done

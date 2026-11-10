@@ -5,11 +5,8 @@ writes all of it, installs the dependencies, and can write a starter machine to 
 empty directory, shows each file it writes, and drives the starter to the end. The XState a machine is written in is
 in [`xstate.md`](./xstate.md), and writing your own machine is in [`machines.md`](./machines.md).
 
-Everything below is one continuous session, recorded in `docs/captures/quickstart.txt`. It was recorded from a packed
-tarball before `backseat-ai` was published, so the tarball was installed into the empty directory before `init` ran.
-That's why the first lines of `init` say `updated` to a `package.json` that `npm install` had just made, and why
-`backseat-ai` is missing from the dependencies `init` adds. Installed from the registry, `init` creates the
-`package.json` itself and adds `backseat-ai` alongside `xstate` and `zod`.
+Everything below is one continuous session, recorded in `docs/captures/quickstart.txt` from the published package
+in an empty directory named `my-agent`, with npm's own output cut to `…`.
 
 ## `init`
 
@@ -17,14 +14,14 @@ Run it in the directory that should become the project. `--starter` writes a sta
 
 ```text docs/captures/quickstart.txt
 $ npx backseat-ai init --starter
-# started 2026-11-09T20:04:19Z, exit 0
+# started 2026-11-10T17:57:29Z, exit 0
 
-updated   package.json name — my-agent; every run records the project by it
-updated   package.json type — module; the catalog is an ES module
-updated   scripts.typecheck — tsc
-$ npm install xstate@^5.32.6 zod@^4.5.4
 …
-updated   dependencies — xstate zod
+created   package.json — my-agent
+updated   scripts.typecheck — tsc
+$ npm install backseat-ai@^0.1.0 xstate@^5.32.6 zod@^4.5.4
+…
+updated   dependencies — backseat-ai xstate zod
 $ npm install -D typescript@^7.0.2 typescript5@npm:typescript@^5.9.3 @types/node@^26.4.1
 …
 updated   devDependencies — typescript typescript5 @types/node
@@ -148,9 +145,9 @@ An agent drives a machine through `node cli.ts --drive`, one call at a time. Tel
 
 ```text docs/captures/quickstart.txt
 $ node cli.ts --drive create my-agent
-# started 2026-11-09T20:04:21Z, exit 0
+# started 2026-11-10T17:57:32Z, exit 0
 
-Actor `0cd7dd22-c305-4beb-88b3-659a983e3f1f` is running `my-agent`.
+Actor `8b28f092-25ed-4448-9b4f-497bd053ff98` is running `my-agent`.
 
 Do the work this machine is for, then finish.
 
@@ -171,21 +168,21 @@ still running:
 
 ```text docs/captures/quickstart.txt
 ---
-0cd7dd22-c305-4beb-88b3-659a983e3f1f · at start · active
+8b28f092-25ed-4448-9b4f-497bd053ff98 · at start · active
 ```
 
 The agent sends the one move it was offered:
 
 ```text docs/captures/quickstart.txt
-$ node cli.ts --drive send 0cd7dd22-c305-4beb-88b3-659a983e3f1f go
-# started 2026-11-09T20:04:21Z, exit 0
+$ node cli.ts --drive send 8b28f092-25ed-4448-9b4f-497bd053ff98 go
+# started 2026-11-10T17:57:32Z, exit 0
 
 Tell whoever asked for this what was done. The run ends here.
 
 This actor is done. Nothing more can be sent.
 
 ---
-0cd7dd22-c305-4beb-88b3-659a983e3f1f · at done · done
+8b28f092-25ed-4448-9b4f-497bd053ff98 · at done · done
 ```
 
 A final state's instructions lead its response, since they were written for this moment, and the actor says it's
