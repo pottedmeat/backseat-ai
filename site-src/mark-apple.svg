@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="180" height="180">
+  <!-- The Backseat mark for the 180px Apple touch icon: the plate fills the square (iOS paints transparency black and masks its own corners), the ring dropped, the border kept inside. Rasterise at 180×180. -->
+  <rect x="0" y="0" width="64" height="64" fill="#116b3f"/>
+  <rect x="3.5" y="3.5" width="57" height="57" rx="11" fill="#116b3f" stroke="#ffffff" stroke-width="4"/>
+  <path d="M26 61 V36" fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="butt"/>
+  <path d="M26 36 V15" fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="round"/>
+  <path d="M26 50 Q27 32 47 17" fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="round"/>
+</svg>

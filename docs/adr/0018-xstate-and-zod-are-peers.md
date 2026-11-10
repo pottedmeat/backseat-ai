@@ -1,0 +1,7 @@
+# XState and zod are peers
+
+A machine file imports `xstate` (for `assign`, `spawnChild` and the rest) and `zod` (for its schemas), and Backseat runs that machine with its own imports of both. The two copies have to be the same copy. Registration checks a schema with `instanceof z.ZodObject`, so a schema built by a second zod is refused as "must be a zod object schema". The machine's actions and types also come from the project's XState, while Backseat's XState interprets them.
+
+**`xstate` and `zod` are peer dependencies of `backseat-ai`, at `^5.32.6` and `^4.5.4`, and the project installs them (`npm install backseat-ai xstate zod`).** If they were regular dependencies, a project that installs its own copy, as every project that writes a machine has to, could end up with two. That can fail at registration or, worse, run a machine on mixed code. As peers, the package manager resolves a single copy, the project's, and reports a range conflict at install time. `init` takes its scaffold's `xstate` and `zod` ranges from these peer ranges, so a new project starts inside them.
+
+The cost: a project has to name both packages itself and keep them in range. Backseat can't ship a fix by pinning a newer XState or zod; it can only widen or narrow the peer range. XState's range is a caret even though Backseat reads one of XState's private fields ([ADR-0019](0019-backseat-reads-xstates-private-transitions.md)).

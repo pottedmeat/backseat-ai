@@ -1,0 +1,24 @@
+$ node cli.ts --drive send 1b36b700-73f1-4497-80fd-993bb42a624f/task-1-2 search.results -
+# stdin:
+{"query":"Indian Point Table Rock Lake Branson fishing access kids"}
+# started 2026-11-07T19:25:23Z, exit 0
+
+Run `data.current` and report it done, naming the query.
+
+## Data
+
+- current: string
+Table Rock Lake bank fishing spots near Branson MO families
+
+## To move to state: searching (Queries are being worked one at a time.)
+
+### search.results → searching (Another query is waiting.)
+
+    query: "Table Rock Lake bank fishing spots near Branson MO families"
+
+Also offered — each shown in full on an earlier response in this state; call describe <event> to see one whole:
+
+- queries.add → searching
+
+---
+1b36b700-73f1-4497-80fd-993bb42a624f/task-1-2 · at searching · active

@@ -1,0 +1,22 @@
+[
+  {
+    "id": "data-only-across-readers",
+    "title": "`data` only where the reader is not the writer",
+    "why": "A driver holds its whole conversation, so publishing back a value it already sent is noise it has to read past. `data` earns its place when the reader is not the writer: a child's driver reading what its parent set, or a value the machine itself computed."
+  },
+  {
+    "id": "bound-every-loop",
+    "title": "Bound every loop, and open a door at the bound",
+    "why": "An agent that cannot finish in five rounds will not finish in fifty, and closing the loop without an exit strands it in a state with nothing it can send. The way out opens as the way round shuts."
+  },
+  {
+    "id": "spend-the-last-word",
+    "title": "A final state's instructions are the last thing the agent reads",
+    "why": "Arriving at a final state delivers its instructions and closes the actor, so nothing can be said after them. Spend them on the act that closes the work out; endings split to record a distinction should not share one form of words."
+  },
+  {
+    "id": "store-nothing-unread",
+    "title": "Store nothing in context that nothing reads",
+    "why": "The agent already holds the value it sent, so a copy nothing reads buys nothing. It makes the run record look as though the machine depends on a fact it never uses."
+  }
+]

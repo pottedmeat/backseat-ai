@@ -1,0 +1,24 @@
+$ node cli.ts --drive send 1b36b700-73f1-4497-80fd-993bb42a624f/task-1-3 search.results -
+# stdin:
+{"query":"Table Rock Lake trout fishing Lake Taneycomo kids family"}
+# started 2026-11-07T19:24:57Z, exit 0
+
+Run `data.current` and report it done, naming the query.
+
+## Data
+
+- current: string
+Roaring River State Park trout fishing kids Cassville Missouri
+
+## To move to state: searching (Queries are being worked one at a time.)
+
+### search.results → searching (Another query is waiting.)
+
+    query: "Roaring River State Park trout fishing kids Cassville Missouri"
+
+Also offered — each shown in full on an earlier response in this state; call describe <event> to see one whole:
+
+- queries.add → searching
+
+---
+1b36b700-73f1-4497-80fd-993bb42a624f/task-1-3 · at searching · active

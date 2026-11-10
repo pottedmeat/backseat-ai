@@ -1,0 +1,37 @@
+$ node cli.ts --drive send 1b36b700-73f1-4497-80fd-993bb42a624f/task-1-2 search.results -
+# stdin:
+{"query":"Table Rock Lake fishing license kids under 16 Missouri fishing docks"}
+# started 2026-11-07T19:25:28Z, exit 0
+
+Write a finding that answers `data.subQuestion` from the hits you gathered, listing only the sources you actually drew on. `data.question` is the research question it was cut from: it tells you what the finding will be read for, not what to answer. If the hits are too thin, or what the finding turns on rests on snippets you could still read at the source, resume the search with further queries instead. Say in the finding which facts came from snippets alone. If you have searched and nothing you found supports an answer, say so and give the reason: do not pad a finding out, and do not list a source you would not stand behind. A stated absence is worth more to the lead than a finding you do not believe.
+
+## Data
+
+- question: string
+Where is the best place to take my kids fishing in Branson, MO?
+
+- subQuestion: string
+What does Table Rock Lake offer for family fishing near Branson (Table Rock State Park, Indian Point, bank fishing, fishing docks)? Cover only Table Rock Lake, not Taneycomo.
+
+## To move to state: complete (The sub-task is finished, with a finding or a stated absence.)
+
+### finding.submit → complete (The sub-question is answered.)
+
+    summary: string   // min length 80
+    sources: {
+      url: string     // uri
+      title: string   // min length 1
+    }[]               // min 1 items
+
+### finding.empty → complete (Nothing found supports an answer.)
+
+    reason: string   // min length 80
+
+## To move to state: searching (Queries are being worked one at a time.)
+
+### search.resume → searching (The hits do not yet answer it.)
+
+    queries: string[]   // min 1 items, each: min length 3
+
+---
+1b36b700-73f1-4497-80fd-993bb42a624f/task-1-2 · at summarizing · active

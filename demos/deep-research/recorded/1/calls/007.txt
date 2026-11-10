@@ -1,0 +1,16 @@
+$ node cli.ts --drive send 1b36b700-73f1-4497-80fd-993bb42a624f task.next
+# started 2026-11-07T19:23:43Z, exit 0
+
+Dispatch while another sub-task is offered; otherwise wait until all of your subagents are complete, then move to review.
+
+Offered — each shown in full on an earlier response in this state; call describe <event> to see one whole:
+
+- task.next → researching
+
+## Subagents to start
+
+- 1b36b700-73f1-4497-80fd-993bb42a624f/task-1-3 — Are there stocked ponds, trout parks or hatchery attractions near Branson (Shepherd of the Hills Fish Hatchery, Bass Pro Shops, Lake Springfield, Roaring River State Park) good for kids? Cover only these hatchery and stocked-water options.
+  `node cli.ts --drive snapshot 1b36b700-73f1-4497-80fd-993bb42a624f/task-1-3`
+
+---
+1b36b700-73f1-4497-80fd-993bb42a624f · at researching · active

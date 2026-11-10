@@ -1,0 +1,18 @@
+{
+  "name": "pr-review",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "One machine, one actor, no spawning: work a pull request to a verified close and refuse to close over a failing check. The second use-case authored on the one-value surface.",
+  "scripts": {
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "backseat-ai": "workspace:*",
+    "xstate": "^5.32.6",
+    "zod": "^4.5.4"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  }
+}

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- The Backseat mark (favicon source): the kicker's plate and an off-ramp fork, both branches solid. -->
+  <rect x="1" y="1" width="62" height="62" rx="14" fill="none" stroke="#116b3f" stroke-width="2"/>
+  <rect x="4" y="4" width="56" height="56" rx="12" fill="#116b3f" stroke="#ffffff" stroke-width="4"/>
+  <path d="M26 61 V36" fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="butt"/>
+  <path d="M26 36 V15" fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="round"/>
+  <path d="M26 50 Q27 32 47 17" fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="round"/>
+</svg>

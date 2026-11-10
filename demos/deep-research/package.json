@@ -1,0 +1,20 @@
+{
+  "name": "deep-research",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Anthropic's orchestrator-worker research architecture as two Backseat machines: a lead that decomposes a question, dispatches a worker per sub-task, judges the round, then drafts and cites a report.",
+  "scripts": {
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "@typesafe-ai/sdk": "^0.6.0",
+    "backseat-ai": "workspace:*",
+    "xstate": "^5.32.6",
+    "zod": "^4.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^26.4.1",
+    "typescript": "^7.0.2"
+  }
+}

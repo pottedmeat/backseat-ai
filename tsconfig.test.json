@@ -1,0 +1,9 @@
+{
+  // The package tsconfigs exclude `*.test.ts` so tests are never emitted to `dist`; this checks them, emitting nothing.
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "allowImportingTsExtensions": true
+  },
+  "include": ["packages/*/src/**/*.test.ts"]
+}

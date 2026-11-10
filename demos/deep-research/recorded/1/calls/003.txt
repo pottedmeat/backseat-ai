@@ -1,0 +1,28 @@
+$ node cli.ts --drive send 1b36b700-73f1-4497-80fd-993bb42a624f brief.submit -
+# stdin:
+{"question":"Where is the best place to take my kids fishing in Branson, MO?"}
+# started 2026-11-07T19:23:19Z, exit 0
+
+You are planning round `data.round` of at most `data.maxRounds`. Start broad: a first round maps the ground — which candidates, sources and angles exist — rather than trying to settle the answer, and later rounds add depth aimed at what it turns up. List every sub-task you could commission this round, exhaustively and at least 10: this machine picks which of them run and in what order, so do not trim the list to the ones you would run yourself. Each must be self-contained: a worker sees the research question and its own sub-question, nothing else, and cannot ask you for clarification. State an objective and clear boundaries so two workers do not duplicate each other. Write every boundary in terms the worker can check alone: name the topic it must not cover, never point at another sub-task it cannot see.
+
+## Data
+
+- round: number
+1
+
+- maxRounds: number
+4
+
+- budget: string
+Four rounds at most: the candidates have to be found first, then each examined in turn.
+
+## To move to state: researching (Workers are being dispatched and are running.)
+
+### plan.submit → researching (The round has its sub-tasks.)
+
+    subTasks: {
+      subQuestion: string   // min length 10
+    }[]                     // min 10 items, max 40 items
+
+---
+1b36b700-73f1-4497-80fd-993bb42a624f · at planning · active

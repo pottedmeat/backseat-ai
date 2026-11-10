@@ -1,0 +1,56 @@
+{
+  "name": "backseat-ai",
+  "version": "0.1.0",
+  "description": "Guarded agent workflows: an XState machine an agent drives one enabled move at a time, and a CLI that fronts it.",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pottedmeat/backseat-ai.git",
+    "directory": "packages/backseat-ai"
+  },
+  "homepage": "https://github.com/pottedmeat/backseat-ai#readme",
+  "bugs": "https://github.com/pottedmeat/backseat-ai/issues",
+  "keywords": [
+    "agent",
+    "llm",
+    "xstate",
+    "state-machine",
+    "workflow",
+    "cli"
+  ],
+  "engines": {
+    "node": ">=22.18"
+  },
+  "bin": {
+    "backseat-ai": "./dist/cli/backseat.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./cli": {
+      "types": "./dist/cli/index.d.ts",
+      "default": "./dist/cli/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "docs",
+    "GLOSSARY.md"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "prepack": "node -e \"for (const p of ['dist', 'docs']) fs.rmSync(p, { recursive: true, force: true }); fs.cpSync('../../docs', 'docs', { recursive: true, filter: (s) => !['captures', 'agents'].includes(path.relative('../../docs', s)) }); fs.copyFileSync('../../GLOSSARY.md', 'GLOSSARY.md')\" && tsc -b --force"
+  },
+  "peerDependencies": {
+    "xstate": "^5.32.6",
+    "zod": "^4.5.4"
+  },
+  "devDependencies": {
+    "xstate": "^5.32.6",
+    "zod": "^4.5.4",
+    "typescript5": "npm:typescript@^5.9.3"
+  }
+}

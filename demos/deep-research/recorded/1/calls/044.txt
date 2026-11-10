@@ -1,0 +1,11 @@
+$ node cli.ts --drive send 1b36b700-73f1-4497-80fd-993bb42a624f/task-1-6 finding.submit -
+# stdin:
+{"summary":"No TripAdvisor or Yelp review pages surfaced in any of four searches, so there is no review-site ranking of kid fishing spots in Branson to report; all of the following is from search snippets only (no pages opened) and is mostly guide or listing content, not reviewer opinion. Most-recommended kid-friendly options: Eiserman Park in Branson (two stocked ponds, free kids fishing on set Tue/Thu/Sat morning and evening hours, catch-and-release, per a KY3 news item); Table Rock State Park shoreline and Lake Taneycomo/Table Rock Lake (a Tripster guide says bluegill and sunfish suit kids, and a boat gives the best reach). Guided family trips are the only place with actual customer reviews: FishingBooker listings for On The Hook Guide Fishing (5.0 from 92 ratings) and Anglers Adventures Guide Service (5.0 from 38 reviews) mark kids welcome, and one reviewer said two children aged 5 and 7 who do not sit still stayed engaged and caught fish; Branson Fish Tales is described as family-friendly with a reviewer praising patience with kids. These are charter reviews, not rankings of places. Caveat: no travel-blog ranking was found either, and the Adventure Collective, Tripster and FishingBooker pages are commercial.","sources":[{"url":"https://www.ky3.com/content/news/Kids-fish-for-free-at-Bransons-Eiserman-Park-MDC-stocks-two-ponds-512644981.html","title":"Kids fish free at Branson's Eiserman Park, MDC stocks two ponds"},{"url":"https://www.tripster.com/travelguide/fishing-in-branson-mo/","title":"Fishing Branson: Top Spots, Pro Tips, and Must-Know Rules"},{"url":"https://nl.fishingbooker.com/charters/view/38853","title":"Anglers Adventures Guide Service – Branson"},{"url":"https://app.advcollective.com/local-experts/family-friendly-fishing-branson-fish-tales","title":"Family friendly fishing Branson Fish Tales"}]}
+# started 2026-11-07T19:25:08Z, exit 0
+
+The result is reported to the lead. Nothing further is asked of you here.
+
+This actor is done. Nothing more can be sent.
+
+---
+1b36b700-73f1-4497-80fd-993bb42a624f/task-1-6 · at complete · done

@@ -1,0 +1,13 @@
+$ node cli.ts --drive send 1b36b700-73f1-4497-80fd-993bb42a624f task.next
+# started 2026-11-07T19:23:43Z, exit 2
+
+Rejected: that event is not offered from the current state, researching, right now. Send only an event listed below.
+
+The actor has not moved.
+
+Dispatch while another sub-task is offered; otherwise wait until all of your subagents are complete, then move to review.
+
+No move is offered until your subagents finish their workflows.
+
+---
+1b36b700-73f1-4497-80fd-993bb42a624f · at researching · active

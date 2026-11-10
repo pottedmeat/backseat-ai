@@ -1,0 +1,204 @@
+$ node cli.ts --drive send 1b36b700-73f1-4497-80fd-993bb42a624f research.conclude -
+# stdin:
+{"synthesis":"Round one mapped the Branson options, mostly from search snippets rather than full pages. Lake Taneycomo (cold, MDC-stocked trout, dock fishing free at Lilleys' Landing Resort and Marina per its own listing, plus Rockaway Beach access and the Fall Creek area) is the most practical beginner-friendly water, with caveats about dam water releases. Eiserman Park in Branson has MDC-stocked ponds where kids fish free, which suits young children. Table Rock State Park offers a marina and fishing on Table Rock Lake, though no source confirmed a specific free kid-suitable dock; Moonshine Beach and Branson Landing bank fishing were not confirmed. Seasonal free kids events exist at Shepherd of the Hills Hatchery (June Kids Fishing Day) and Roaring River State Park (a drive away), but dates come from older notices. Reviews from TripAdvisor or Yelp were not found; guide ratings via FishingBooker exist. Lake Springfield turned up nothing relevant near Branson. Best-supported answer: Eiserman Park ponds for the youngest or first-timers, and Lake Taneycomo (Lilleys' Landing dock, trout) for a classic Branson outing. Evidence is thin on dock details, current dates and prices."}
+# started 2026-11-07T19:25:59Z, exit 0
+
+Write the report body from your synthesis and the findings in the files named in `data.findings`. It is answering `data.question`, the research question you stated at the start. If `data.findings` is empty, no worker reported anything: write what the synthesis says could not be established, and say so plainly rather than writing around it. Do not attach citations yet; that is a separate pass.
+
+## Data
+
+- question: string
+Where is the best place to take my kids fishing in Branson, MO?
+
+- findings: array
+```json
+[
+  {
+    "actorId": "1b36b700-73f1-4497-80fd-993bb42a624f/task-1-1",
+    "subQuestion": "Which Branson-area fishing spots are free or low-cost, with fishing docks, piers or bank access suitable for young children (e.g., Table Rock State Park dock, Moonshine Beach, Branson Landing)? Cover only access, safety and cost, not guided trips.",
+    "sources": [
+      {
+        "url": "https://visitmo.com/things-to-do/lilleys-landing-marina",
+        "title": "Things to Do - Lilleys' Landing Marina (VisitMO)"
+      },
+      {
+        "url": "https://www.bassresource.com/bass-fishing-forums/topic/206763-table-rock-help/",
+        "title": "Table Rock help (Bass Resource forum)"
+      },
+      {
+        "url": "https://www.bassresource.com/bass-fishing-forums/topic/201747-branson-trip/",
+        "title": "Branson trip (Bass Resource forum)"
+      },
+      {
+        "url": "https://campflare.com/campground/moonshine-beach-rec-area-371",
+        "title": "Moonshine Beach (Campflare)"
+      },
+      {
+        "url": "https://www.branson.com/?p=32637",
+        "title": "Moonshine Beach (Branson.com)"
+      },
+      {
+        "url": "https://www.recreation.gov/camping/campgrounds/234371",
+        "title": "Moonshine Beach Rec. Area (Recreation.gov)"
+      }
+    ],
+    "file": "/tmp/backseat-501/scratch/1b36b700-73f1-4497-80fd-993bb42a624f/task-1-1.md"
+  },
+  {
+    "actorId": "1b36b700-73f1-4497-80fd-993bb42a624f/task-1-2",
+    "subQuestion": "What does Table Rock Lake offer for family fishing near Branson (Table Rock State Park, Indian Point, bank fishing, fishing docks)? Cover only Table Rock Lake, not Taneycomo.",
+    "sources": [
+      {
+        "url": "https://mostateparks.com/park/table-rock-state-park/fishing",
+        "title": "Fishing - Table Rock State Park"
+      },
+      {
+        "url": "https://forums.ozarkanglers.com/topic/29219-help-finding-a-spot",
+        "title": "help finding a spot (Ozark Anglers forum)"
+      },
+      {
+        "url": "https://www.bassresource.com/bass-fishing-forums/topic/206763-table-rock-help/",
+        "title": "table rock help (Bass Resource forum)"
+      },
+      {
+        "url": "https://www.recreation.gov/camping/campgrounds/232610",
+        "title": "Indian Point (Recreation.gov)"
+      },
+      {
+        "url": "https://www.branson.com/?p=593",
+        "title": "Boat Ramps & Fishing Spots in Branson MO"
+      }
+    ],
+    "file": "/tmp/backseat-501/scratch/1b36b700-73f1-4497-80fd-993bb42a624f/task-1-2.md"
+  },
+  {
+    "actorId": "1b36b700-73f1-4497-80fd-993bb42a624f/task-1-3",
+    "subQuestion": "Are there stocked ponds, trout parks or hatchery attractions near Branson (Shepherd of the Hills Fish Hatchery, Bass Pro Shops, Lake Springfield, Roaring River State Park) good for kids? Cover only these hatchery and stocked-water options.",
+    "sources": [
+      {
+        "url": "https://mdc.mo.gov/newsroom/mdc-invites-young-anglers-kids-fishing-day-june-7-shepherd-hills",
+        "title": "MDC invites young anglers to Kids Fishing Day at Shepherd of the Hills"
+      },
+      {
+        "url": "https://themissouritimes.com/shepherd-of-the-hills-hatchery-conservation-center-summer-activities/",
+        "title": "Shepherd of the Hills Hatchery & Conservation Center summer activities"
+      },
+      {
+        "url": "https://mdc.mo.gov/newsroom/family-fishing-fair-set-saturday-shepherd-hills-hatchery",
+        "title": "Family Fishing Fair set Saturday at Shepherd of the Hills Hatchery"
+      },
+      {
+        "url": "https://mdc.mo.gov/fishing/fishing-prospects/areas/roaring-river-state-park",
+        "title": "Roaring River State Park - MDC fishing prospects"
+      },
+      {
+        "url": "https://ksisradio.com/take-a-day-trip-for-free-kids-fishing-at-roaring-river/",
+        "title": "Take A Day Trip For Free Kids Fishing At Roaring River"
+      },
+      {
+        "url": "https://www.ky3.com/2026/06/11/bass-pro-shops-donates-fishing-rods-kids/",
+        "title": "Bass Pro Shops donates fishing rods to kids"
+      },
+      {
+        "url": "https://www.ky3.com/2022/04/06/moms-money-fishing-rutledge-wilson-farm-park",
+        "title": "Moms and Money: Fishing at Rutledge-Wilson Farm Park"
+      }
+    ],
+    "file": "/tmp/backseat-501/scratch/1b36b700-73f1-4497-80fd-993bb42a624f/task-1-3.md"
+  },
+  {
+    "actorId": "1b36b700-73f1-4497-80fd-993bb42a624f/task-1-4",
+    "subQuestion": "Which public lakes and rivers in the Branson, MO area (Table Rock Lake, Taneycomo, Bull Shoals, Lake Springfield etc.) allow family fishing, and what are the main public fishing access points? Cover only locations and access, not species or regulations.",
+    "sources": [
+      {
+        "url": "https://mdc.mo.gov/discover-nature/places/rockaway-beach-access",
+        "title": "Rockaway Beach Access (MDC)"
+      },
+      {
+        "url": "https://mdc.mo.gov/node/250858",
+        "title": "Lake Taneycomo (MDC)"
+      },
+      {
+        "url": "https://www.tripster.com/travelguide/fishing-in-branson-mo/",
+        "title": "Fishing Branson: Top Spots, Pro Tips, and Must-Know Rules"
+      },
+      {
+        "url": "https://branson.com/?p=593",
+        "title": "Boat Ramps & Fishing Spots in Branson MO"
+      },
+      {
+        "url": "https://mdc.mo.gov/discover-nature/places/bull-shoals-lake-highway-k-public-access-us-army-corps-engineers",
+        "title": "Bull Shoals Lake, Highway K Public Access (MDC)"
+      },
+      {
+        "url": "https://www.ky3.com/content/news/Kids-fish-for-free-at-Bransons-Eiserman-Park-MDC-stocks-two-ponds-512644981.html",
+        "title": "Kids fish free at Branson's Eiserman Park, MDC stocks two ponds"
+      },
+      {
+        "url": "https://www.islands.com/2242801/beaver-creek-park-marina-east-branson-missouri-peaceful-lake-views-fishing-boating/",
+        "title": "Beaver Creek Park and Marina east of Branson"
+      }
+    ],
+    "file": "/tmp/backseat-501/scratch/1b36b700-73f1-4497-80fd-993bb42a624f/task-1-4.md"
+  },
+  {
+    "actorId": "1b36b700-73f1-4497-80fd-993bb42a624f/task-1-5",
+    "subQuestion": "What is Lake Taneycomo fishing like for kids and beginners (trout fishing, Lilley's Landing, Branson Landing area, Fall Creek, Rockaway Beach)? Cover only Taneycomo, not other lakes.",
+    "sources": [
+      {
+        "url": "https://mdc.mo.gov/node/250858",
+        "title": "Lake Taneycomo (Missouri Department of Conservation)"
+      },
+      {
+        "url": "https://visitmo.com/things-to-do/lilleys-landing-marina",
+        "title": "Lilleys Landing Marina (VisitMO)"
+      },
+      {
+        "url": "https://forums.ozarkanglers.com/topic/45164-looking-for-a-good-spot-to-take-the-family-fishing",
+        "title": "Ozark Anglers forum: looking for a good spot to take the family fishing"
+      },
+      {
+        "url": "https://guidesly.com/book-a-guide/guide-details/Badocks-Fishing-Guide-Service/lake-taneycomo-fishing-badocks-guide-service",
+        "title": "Lake Taneycomo Short Fishing Trip with Bryan (Guidesly)"
+      },
+      {
+        "url": "https://app.advcollective.com/ozark_mountains/Fishing/fishing-lake-taneycomo-in-branson,-missouri",
+        "title": "Fishing Lake Taneycomo in Branson, Missouri (Adventure Collective)"
+      }
+    ],
+    "file": "/tmp/backseat-501/scratch/1b36b700-73f1-4497-80fd-993bb42a624f/task-1-5.md"
+  },
+  {
+    "actorId": "1b36b700-73f1-4497-80fd-993bb42a624f/task-1-6",
+    "subQuestion": "What do reviews on TripAdvisor, Yelp and travel blogs say about the best places for kids to fish in Branson, MO? Cover only review opinions and rankings.",
+    "sources": [
+      {
+        "url": "https://www.ky3.com/content/news/Kids-fish-for-free-at-Bransons-Eiserman-Park-MDC-stocks-two-ponds-512644981.html",
+        "title": "Kids fish free at Branson's Eiserman Park, MDC stocks two ponds"
+      },
+      {
+        "url": "https://www.tripster.com/travelguide/fishing-in-branson-mo/",
+        "title": "Fishing Branson: Top Spots, Pro Tips, and Must-Know Rules"
+      },
+      {
+        "url": "https://nl.fishingbooker.com/charters/view/38853",
+        "title": "Anglers Adventures Guide Service – Branson"
+      },
+      {
+        "url": "https://app.advcollective.com/local-experts/family-friendly-fishing-branson-fish-tales",
+        "title": "Family friendly fishing Branson Fish Tales"
+      }
+    ],
+    "file": "/tmp/backseat-501/scratch/1b36b700-73f1-4497-80fd-993bb42a624f/task-1-6.md"
+  }
+]
+```
+
+## To move to state: citing (The draft is written and its citations are being attached.)
+
+### draft.submit → citing (The report body is written.)
+
+    draft: string   // min length 200
+
+---
+1b36b700-73f1-4497-80fd-993bb42a624f · at drafting · active

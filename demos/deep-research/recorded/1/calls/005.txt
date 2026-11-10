@@ -1,0 +1,16 @@
+$ node cli.ts --drive send 1b36b700-73f1-4497-80fd-993bb42a624f task.next
+# started 2026-11-07T19:23:39Z, exit 0
+
+Dispatch while another sub-task is offered; otherwise wait until all of your subagents are complete, then move to review.
+
+Offered — each shown in full on an earlier response in this state; call describe <event> to see one whole:
+
+- task.next → researching
+
+## Subagents to start
+
+- 1b36b700-73f1-4497-80fd-993bb42a624f/task-1-2 — What does Table Rock Lake offer for family fishing near Branson (Table Rock State Park, Indian Point, bank fishing, fishing docks)? Cover only Table Rock Lake, not Taneycomo.
+  `node cli.ts --drive snapshot 1b36b700-73f1-4497-80fd-993bb42a624f/task-1-2`
+
+---
+1b36b700-73f1-4497-80fd-993bb42a624f · at researching · active

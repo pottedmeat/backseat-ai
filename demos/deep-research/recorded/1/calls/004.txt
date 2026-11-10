@@ -1,0 +1,33 @@
+$ node cli.ts --drive send 1b36b700-73f1-4497-80fd-993bb42a624f plan.submit -
+# stdin:
+{"subTasks":[
+{"subQuestion":"Which public lakes and rivers in the Branson, MO area (Table Rock Lake, Taneycomo, Bull Shoals, Lake Springfield etc.) allow family fishing, and what are the main public fishing access points? Cover only locations and access, not species or regulations."},
+{"subQuestion":"What is Lake Taneycomo fishing like for kids and beginners (trout fishing, Lilley's Landing, Branson Landing area, Fall Creek, Rockaway Beach)? Cover only Taneycomo, not other lakes."},
+{"subQuestion":"What does Table Rock Lake offer for family fishing near Branson (Table Rock State Park, Indian Point, bank fishing, fishing docks)? Cover only Table Rock Lake, not Taneycomo."},
+{"subQuestion":"Which Branson-area fishing spots are free or low-cost, with fishing docks, piers or bank access suitable for young children (e.g., Table Rock State Park dock, Moonshine Beach, Branson Landing)? Cover only access, safety and cost, not guided trips."},
+{"subQuestion":"What guided fishing trips or kid-friendly charters operate in Branson, MO, including prices, minimum ages and gear provided? Cover only guides and charters, not self-guided fishing."},
+{"subQuestion":"What are Missouri fishing license requirements for children, including age exemptions, trout permits for Taneycomo, and where to buy them? Cover only licensing and permits."},
+{"subQuestion":"Which Branson-area fishing species are easiest for kids to catch (bluegill, trout, crappie, catfish) and what seasons, baits and times of year are best? Cover only species and seasons."},
+{"subQuestion":"Where can families rent boats, fishing gear, or buy bait and tackle in Branson, MO, and which marinas or outfitters (e.g., Lilley's Landing) are kid-friendly? Cover only rentals and supplies."},
+{"subQuestion":"What do reviews on TripAdvisor, Yelp and travel blogs say about the best places for kids to fish in Branson, MO? Cover only review opinions and rankings."},
+{"subQuestion":"What safety considerations apply for kids fishing near Branson, such as Taneycomo dam water-release schedules, cold water, and life jacket rules? Cover only safety, not locations."},
+{"subQuestion":"Are there stocked ponds, trout parks or hatchery attractions near Branson (Shepherd of the Hills Fish Hatchery, Bass Pro Shops, Lake Springfield, Roaring River State Park) good for kids? Cover only these hatchery and stocked-water options."},
+{"subQuestion":"Which Branson-area resorts, campgrounds and lodging offer on-site fishing for families (e.g., Table Rock State Park campground, Lilley's Landing resort, Big Cedar Lodge)? Cover only lodging with fishing access."}
+]}
+# started 2026-11-07T19:23:33Z, exit 0
+
+This machine picked which of your proposed sub-tasks run this round, and in what order; those not picked are not run, and you may propose them again in a later round. For each one, spawn a subagent and tell it to run the listed command: each worker's searches and pages then stay out of your context, and the workers run side by side. Keep dispatching while another sub-task is offered, then wait until all of your subagents are complete before moving to review.
+
+## To move to state: researching (Workers are being dispatched and are running.)
+
+### task.next → researching (Another sub-task is waiting to be dispatched.)
+
+    no payload
+
+## Subagents to start
+
+- 1b36b700-73f1-4497-80fd-993bb42a624f/task-1-1 — Which Branson-area fishing spots are free or low-cost, with fishing docks, piers or bank access suitable for young children (e.g., Table Rock State Park dock, Moonshine Beach, Branson Landing)? Cover only access, safety and cost, not guided trips.
+  `node cli.ts --drive snapshot 1b36b700-73f1-4497-80fd-993bb42a624f/task-1-1`
+
+---
+1b36b700-73f1-4497-80fd-993bb42a624f · at researching · active

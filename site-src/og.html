@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Backseat social card</title>
+<!-- The social card, 1200×630:
+     one green sign filling the card on light pavement, backseat-ai.dev as the tab hung off its top-left,
+     the headline in white with its yellow plate, the mark at 220px on the right. Screenshot this page at 1200×630 to og.png. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,800;1,800&family=Overpass+Mono:wght@700&display=swap">
+<style>
+:root { --sign-bg: #0f4d2e; --sign-deep: #0a3a22; --yellow: #f2c200; --f-head: "Overpass", "Highway Gothic", "Arial Narrow", sans-serif; --f-mono: "Overpass Mono", ui-monospace, Menlo, monospace; }
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; background: #f4f5f2; }
+.card { position: relative; width: 1200px; height: 630px; background: #f4f5f2; color: #e9f5ee; }
+.tab { position: absolute; left: 56px; top: 44px; height: 68px; padding: 0 28px; display: flex; align-items: center; background: var(--sign-deep); color: #ffffff; font-family: var(--f-mono); font-weight: 700; font-size: 26px; letter-spacing: .02em; border: 5px solid #ffffff; border-bottom: 0; border-radius: 22px 22px 0 0; box-shadow: 0 0 0 3px var(--sign-bg); clip-path: inset(-8px -8px 0 -8px); z-index: 1; }
+.sign { position: absolute; left: 56px; top: 112px; right: 56px; bottom: 56px; background: var(--sign-bg); border: 5px solid #ffffff; border-radius: 0 28px 28px 28px; box-shadow: 0 0 0 3px var(--sign-bg); padding: 56px 64px; }
+.sign h1 { margin: 0; font-family: var(--f-head); font-weight: 800; font-size: 80px; line-height: .98; letter-spacing: -.02em; color: #ffffff; max-width: 720px; text-wrap: balance; }
+.sign h1 em { font-style: italic; color: #101410; background: var(--yellow); padding: 0 .12em; }
+.mark { position: absolute; right: 56px; top: 50%; transform: translateY(-50%); width: 220px; height: 220px; }
+.mark svg { width: 100%; height: 100%; display: block; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="tab">backseat-ai.dev</div>
+  <div class="sign">
+    <h1>A workflow in the back seat, <em>nagging</em> your agent through every step.</h1>
+    <div class="mark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+      <rect x="1" y="1" width="62" height="62" rx="14" fill="none" stroke="#116b3f" stroke-width="2"/>
+      <rect x="4" y="4" width="56" height="56" rx="12" fill="#116b3f" stroke="#ffffff" stroke-width="4"/>
+      <path d="M26 61 V36" fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="butt"/>
+      <path d="M26 36 V15" fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="round"/>
+      <path d="M26 50 Q27 32 47 17" fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="round"/>
+    </svg></div>
+  </div>
+</div>
+</body>
+</html>

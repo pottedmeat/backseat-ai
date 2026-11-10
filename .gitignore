@@ -1,0 +1,12 @@
+node_modules/
+dist/
+*.tsbuildinfo
+
+.env
+
+# packed for local installs, never committed
+*.tgz
+
+# copied in by prepack so the tarball carries the docs
+packages/backseat-ai/docs/
+packages/backseat-ai/GLOSSARY.md

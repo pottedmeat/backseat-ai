@@ -1,0 +1,15 @@
+$ node cli.ts --drive describe 1b36b700-73f1-4497-80fd-993bb42a624f/task-1-2 finding.submit
+# started 2026-11-07T19:25:38Z, exit 0
+
+## To move to state: complete (The sub-task is finished, with a finding or a stated absence.)
+
+### finding.submit → complete (The sub-question is answered.)
+
+    summary: string   // min length 80
+    sources: {
+      url: string     // uri
+      title: string   // min length 1
+    }[]               // min 1 items
+
+---
+1b36b700-73f1-4497-80fd-993bb42a624f/task-1-2 · at summarizing · active

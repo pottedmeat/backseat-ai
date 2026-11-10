@@ -1,0 +1,1070 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Backseat</title>
+<meta name="description" content="Most frameworks call the model and decide its next step; Backseat tells the model which steps are open and lets it choose.">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f4f5f2">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0e120f">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://backseat-ai.dev/">
+<meta property="og:title" content="Backseat">
+<meta property="og:description" content="Most frameworks call the model and decide its next step; Backseat tells the model which steps are open and lets it choose.">
+<meta property="og:image" content="https://backseat-ai.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,400;0,600;0,800;1,400;1,800&family=Overpass+Mono:wght@400;600;700&display=swap">
+<script>
+(function () { try { var t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch (e) {} })();
+</script>
+<style>
+/* Roadside.
+   One 1200px column; the hero is two columns; each section is plate → h2 → lead → content; two tints alternate with a hairline at each change. */
+:root {
+  --bg: #f4f5f2; --bg2: #e9ece6; --panel: #ffffff; --ink: #101410; --fg2: #3a4238; --fg3: #6f7a6d;
+  --line: rgba(16,20,16,.12); --green: #116b3f; --green2: #0d5431; --yellow: #f2c200; --white: #ffffff;
+  --sign-bg: #0f4d2e; --sign-deep: #0a3a22; --sign-fg: #e9f5ee; --sign-dim: #8fc2a6; --sign-hi: #ffffff; --sign-rule: #2a7a52; --sign-border: #ffffff; --sign-ring: #0f4d2e;
+  --asphalt: #1b1d1f; --asphalt-fg: #e4e6e0; --asphalt-dim: #8b9088; --asphalt-hi: #ffffff; --asphalt-rule: #3a3e3b;
+  --shadow: 0 16px 32px -8px rgba(16,20,16,.28);
+  --f-head: "Overpass", "Highway Gothic", "Arial Narrow", sans-serif; --f-body: "Overpass", system-ui, sans-serif; --f-mono: "Overpass Mono", ui-monospace, Menlo, monospace;
+  --wrap: 1200px; --radius: 14px; --h1: clamp(44px, 7.4vw, 80px); --h2: clamp(32px, 4.4vw, 44px);
+  --nav-bg: #116b3f; --nav-fg: #ffffff;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0e120f; --bg2: #141a15; --panel: #152018; --ink: #f1f3ee; --fg2: #c2cabd; --fg3: #7f8a7c; --line: rgba(241,243,238,.12);
+  --green: #2fbf71; --green2: #5ad68f; --sign-border: #0e120f; --sign-ring: #2fbf71; --asphalt: #050605; --asphalt-rule: #2a2e2b; --shadow: 0 16px 32px -8px rgba(0,0,0,.6);
+  color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --bg: #0e120f; --bg2: #141a15; --panel: #152018; --ink: #f1f3ee; --fg2: #c2cabd; --fg3: #7f8a7c; --line: rgba(241,243,238,.12);
+  --green: #2fbf71; --green2: #5ad68f; --sign-border: #0e120f; --sign-ring: #2fbf71; --asphalt: #050605; --asphalt-rule: #2a2e2b; --shadow: 0 16px 32px -8px rgba(0,0,0,.6);
+  color-scheme: dark;
+}
+:root[data-theme="light"] { color-scheme: light; }
+
+* { box-sizing: border-box; }
+html { background: var(--bg); }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased; transition: background .25s ease, color .25s ease; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+.wrap { max-width: var(--wrap); margin: 0 auto; padding-inline: 32px; }
+@media (max-width: 640px) { .wrap { padding-inline: 16px; } }
+
+/* the gantry */
+nav { background: var(--nav-bg); color: var(--nav-fg); padding-block: 18px; border-bottom: 3px solid var(--white); box-shadow: 0 1.5px 0 var(--nav-bg); }
+:root[data-theme="dark"] nav, :root:not([data-theme="light"]) nav { border-color: var(--bg); box-shadow: none; }
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) nav { border-color: var(--white); box-shadow: 0 1.5px 0 var(--nav-bg); } }
+:root[data-theme="light"] nav { border-color: var(--white); box-shadow: 0 1.5px 0 var(--nav-bg); }
+nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.mark { font-family: var(--f-head); font-weight: 800; font-size: 22px; letter-spacing: -.02em; text-decoration: none; }
+.mark b { font-weight: 400; color: rgba(255,255,255,.65); }
+nav ul { display: flex; gap: 22px; list-style: none; margin: 0; padding: 0; font-family: var(--f-mono); font-size: 14px; align-items: center; color: rgba(255,255,255,.85); }
+nav ul a { text-decoration: none; }
+nav ul a:hover { color: var(--white); }
+@media (max-width: 760px) { nav ul li.lnk { display: none; } }
+.btn { font-family: var(--f-mono); font-size: 14px; padding: 10px 16px; border-radius: 8px; border: 1px solid var(--white); color: var(--white); text-decoration: none; transition: background .15s, color .15s; }
+.btn:hover { background: var(--white); color: var(--nav-bg); }
+#tt { font: 16px/1 system-ui; background: transparent; border: 1px solid rgba(255,255,255,.4); color: var(--white); border-radius: 8px; width: 36px; height: 36px; cursor: pointer; }
+#tt:hover { background: rgba(255,255,255,.12); }
+
+/* sections: plain, tinted, plain; a hairline at each change */
+section { border-top: 1px solid var(--line); padding-block: 64px; }
+section.hero { border-top: 0; padding-block: 56px 80px; }
+section.tint { background: var(--bg2); }
+.hero .wrap { display: grid; gap: 48px; align-items: start; }
+@media (min-width: 900px) { .hero .wrap { grid-template-columns: 1.05fr 1fr; } }
+
+/* the plate, the headline, the lead */
+.kicker { display: inline-block; font-family: var(--f-mono); font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--white); background: var(--green); padding: 6px 12px; border-radius: 6px; border: 2px solid var(--white); box-shadow: 0 0 0 1.5px var(--green); margin: 0 0 20px; }
+:root[data-theme="dark"] .kicker, :root:not([data-theme="light"]) .kicker { background: #116b3f; border-color: var(--bg); box-shadow: 0 0 0 1.5px var(--green); }
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) .kicker { background: var(--green); border-color: var(--white); box-shadow: 0 0 0 1.5px var(--green); } }
+:root[data-theme="light"] .kicker { background: var(--green); border-color: var(--white); box-shadow: 0 0 0 1.5px var(--green); }
+h1, h2 { font-family: var(--f-head); font-weight: 800; letter-spacing: -.02em; margin: 0; text-wrap: balance; }
+h1 { font-size: var(--h1); line-height: .98; margin-bottom: 24px; }
+h2 { font-size: var(--h2); line-height: 1.08; margin-bottom: 18px; max-width: 820px; }
+h1 em, h2 em { font-style: italic; color: #101410; background: var(--yellow); padding: 0 .12em; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.dek { margin: -8px 0 20px; font-family: var(--f-mono); font-size: 14px; letter-spacing: .01em; color: var(--fg3); max-width: 540px; }
+.lead { font-size: 20px; line-height: 1.45; color: var(--fg2); max-width: 540px; margin: 0 0 36px; }
+.sec .lead { font-size: 18px; max-width: 620px; margin-bottom: 40px; }
+.prose .lead { margin-bottom: 24px; }
+.prose .body { font-size: 16px; line-height: 1.55; color: var(--fg2); max-width: 620px; margin: 0 0 20px; }
+.prose .body:last-child { margin-bottom: 0; }
+.prose .lead:last-child { margin-bottom: 0; }
+.lead code, .intro code, .eyebrow code { font-family: var(--f-mono); font-size: .9em; background: var(--panel); border: 1px solid var(--line); padding: 1px 6px; border-radius: 4px; }
+.install { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 20px; }
+.pill { display: inline-flex; align-items: center; gap: 12px; font-family: var(--f-mono); font-size: 14px; padding: 12px 18px; border-radius: 8px; background: var(--asphalt); color: var(--asphalt-fg); border: 0; cursor: pointer; }
+.pill .d { color: var(--asphalt-dim); }
+.pill .tag { font-size: 11px; letter-spacing: .04em; padding: 4px 8px; border-radius: 6px; background: rgba(255,255,255,.14); }
+.hero .btn, .sec .btn { border-color: var(--green); color: var(--green); }
+.hero .btn:hover, .sec .btn:hover { background: var(--green); color: var(--white); }
+.intro { margin: 0; max-width: 540px; font-size: 15px; color: var(--fg3); }
+
+/* the definition tier: source on a sheet above the sign, eyebrows telling the two apart */
+.pair { display: grid; gap: 28px; }
+.eyebrow { font-family: var(--f-mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--fg3); margin: 0 0 10px; }
+.eyebrow b { color: var(--ink); font-weight: 600; }
+.eyebrow code { text-transform: none; letter-spacing: 0; }
+.source { margin: 0; min-width: 0; }
+.source pre { margin: 0; font-family: var(--f-mono); font-size: 13px; line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere; background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 10px; padding: 22px 26px; }
+.source .k { font-weight: 700; } .source .s { color: var(--fg2); } .source .c { color: var(--fg3); font-style: italic; } .source .n { color: var(--green2); }
+
+/* the sign: the send is a tab hung off it, flush with its left edge, as wide as its longest line; the receive is the sign */
+.capture { margin: 0; min-width: 0; display: grid; gap: 28px; }
+.capture pre { margin: 0; font-family: var(--f-mono); font-size: 13px; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; }
+.capture .cmd { color: var(--sign-hi); font-weight: 700; }
+.capture .h, .capture .nomove { color: var(--sign-hi); font-weight: 700; }
+.capture .sch, .capture .meta, .capture .foot, .capture .cut { color: var(--sign-dim); }
+.sign { color: var(--sign-fg); }
+.io { position: relative; padding: 22px 26px; }
+.io .tag { position: absolute; top: 9px; right: 14px; font-family: var(--f-mono); font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--sign-dim); }
+.sent { position: relative; z-index: 1; width: fit-content; max-width: 100%; background: var(--sign-deep); border: 3px solid var(--sign-border); border-bottom: 0; border-radius: var(--radius) var(--radius) 0 0; box-shadow: 0 0 0 2px var(--sign-ring); padding: 30px 26px 18px; margin: 0; clip-path: inset(-6px -6px 0 -6px); }
+.sent:last-child { border-bottom: 3px solid var(--sign-border); border-radius: var(--radius); clip-path: none; box-shadow: 0 0 0 2px var(--sign-ring), var(--shadow); }
+.recv { background: var(--sign-bg); border: 3px solid var(--sign-border); border-radius: var(--radius); box-shadow: 0 0 0 2px var(--sign-ring), var(--shadow); padding-top: 30px; }
+
+/* the asphalt card: what a person types, in the terminal's own colours, never a sign */
+.asphalt { background: var(--asphalt); color: var(--asphalt-fg); border-radius: var(--radius); padding: 22px 28px 26px; font-family: var(--f-mono); font-size: 13.5px; line-height: 1.85; min-width: 0; box-shadow: var(--shadow); max-width: 860px; }
+.cards { display: grid; gap: 18px; min-width: 0; max-width: 860px; }
+.card { padding-top: 0; }
+.strip { display: flex; justify-content: space-between; gap: 12px; align-items: center; flex-wrap: wrap; margin: 0 -28px 10px; padding: 12px 28px 10px; background: rgba(255,255,255,.07); border-radius: var(--radius) var(--radius) 0 0; }
+.strip .pre { color: var(--asphalt-hi); font-weight: 700; }
+.strip .pre i { font-style: normal; color: var(--asphalt-dim); font-weight: 400; }
+.strip .sub { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--asphalt-dim); }
+.row { display: grid; grid-template-columns: 200px 1fr; gap: 18px; padding: 9px 0; align-items: baseline; }
+.row + .row { border-top: 1px solid var(--asphalt-rule); }
+.row .c { color: var(--asphalt-hi); line-height: 1.5; overflow-wrap: anywhere; }
+.row .c i { font-style: normal; color: var(--asphalt-dim); }
+.row .g { color: var(--asphalt-dim); font-size: 13px; line-height: 1.7; }
+.row .g code { font-family: inherit; color: var(--asphalt-fg); }
+@media (max-width: 1000px) { .row { grid-template-columns: 170px 1fr; } }
+@media (max-width: 640px) { .row { grid-template-columns: 1fr; gap: 2px; } }
+.term .strip .pre { font-size: 14px; }
+.term .strip .pre .d { color: var(--asphalt-dim); font-weight: 400; }
+.term .strip .tag { font-family: var(--f-mono); font-size: 11px; letter-spacing: .04em; padding: 4px 8px; border-radius: 6px; background: rgba(255,255,255,.14); color: var(--asphalt-fg); border: 0; cursor: pointer; }
+.term pre { margin: 0; font-family: inherit; font-size: 13px; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--asphalt-dim); }
+.term pre b { font-weight: 400; color: var(--asphalt-fg); }
+.term pre .k { color: var(--asphalt-hi); font-weight: 700; }
+.term pre .p { color: var(--asphalt-dim); }
+.term pre .cut { color: var(--asphalt-dim); }
+.term + .install { margin-top: 20px; }
+.pair .asphalt + .trace { margin-top: 0; }
+
+/* the one screenshot: Stately Studio drawing the lead, one image per scheme */
+.shot { margin: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px; }
+.shot img { display: block; width: 100%; height: auto; border-radius: 6px; }
+.shot .dark { display: none; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .shot .light { display: none; } :root:not([data-theme="light"]) .shot .dark { display: block; } }
+:root[data-theme="dark"] .shot .light { display: none; }
+:root[data-theme="dark"] .shot .dark { display: block; }
+
+/* the trace report, hand-built from run 1 (Section 13) */
+.trace{margin:0;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;font:400 13px/1.5 var(--f-mono);color:var(--ink)}
+.trace code,.trace pre{font:inherit}
+.trace .head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 18px;padding:14px 20px;background:var(--bg2);border-bottom:1px solid var(--line);color:var(--fg2)}
+.trace .head .run{font:500 16px/1.3 var(--f-body);color:var(--ink)}
+.trace .head b{color:var(--ink);font-weight:500}
+.trace .panes{display:grid}
+.trace .chain,.trace .detail{padding:18px 20px;min-width:0}
+.trace .detail{border-top:1px solid var(--line)}
+@media (min-width:820px){.trace .panes{grid-template-columns:1fr 1fr}.trace .detail{border-top:0;border-left:1px solid var(--line)}}
+.trace .stop{border-left:2px solid var(--line);padding-left:14px;margin:0 0 16px}
+.trace .stop:last-child{margin-bottom:0}
+.trace .stop h3{margin:0 0 4px;font:500 14px/1.4 var(--f-mono)}
+.trace .stop h3 small{font:400 12px/1 var(--f-body);color:var(--fg2);margin-left:8px}
+.trace .steps,.trace .offered{margin:0 0 6px;color:var(--fg2)}
+.trace .steps .if{font-size:11px;text-transform:uppercase;letter-spacing:.04em;margin:0 4px}
+.trace .offered code{background:var(--bg2);padding:1px 6px;border-radius:4px;color:var(--ink);margin-left:4px}
+.trace .stop ul{list-style:none;margin:0;padding:0}
+.trace .stop li{display:flex;flex-wrap:wrap;gap:0 10px;padding:5px 8px;border-radius:6px}
+.trace .stop li .t{color:var(--fg3);min-width:62px}
+.trace .stop li .n{color:var(--fg3);min-width:22px}
+.trace .stop li .why{color:var(--fg2)}
+.trace .stop li .cut{color:var(--fg3)}
+.trace .stop li.on{background:var(--bg2);box-shadow:inset 3px 0 0 var(--green)}
+.trace .rej{font-weight:500;color:var(--ink)}
+.trace .detail h3{margin:0 0 12px;font:500 13px/1.5 var(--f-mono);overflow-wrap:anywhere}
+.trace .grp{margin:14px -20px 8px;padding:6px 20px;background:var(--bg2);font:500 11px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--fg2)}
+.trace .lbl{margin:10px 0 4px;font:500 11px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--fg2)}
+.trace .row{display:grid;grid-template-columns:72px 1fr;gap:10px;padding:4px 0;border-bottom:1px solid var(--line);overflow-wrap:anywhere}
+.trace .row .key{color:var(--fg3)}
+.trace .chip{display:inline-block;padding:2px 8px;border-radius:10px;background:var(--bg2);font:500 12px/1.4 var(--f-body);margin-right:6px}
+.trace .block{margin:0;padding:10px 12px;background:var(--bg2);border:1px solid var(--line);border-radius:6px;white-space:pre-wrap;overflow-wrap:anywhere}
+.trace .fold{margin:4px 0 0;color:var(--fg2);font-size:12px}
+.trace .fold::before{content:"▸ "}
+.trace .issue{padding:10px 12px;border:1px solid var(--line);border-radius:6px;overflow-wrap:anywhere}
+.trace .issue b{display:block;font-weight:500}
+.trace .pos{margin:0;padding:8px 12px;background:var(--bg2);border-radius:6px}
+.trace .pos .st{margin-left:10px;color:var(--fg2)}
+.trace .more{margin:12px 0 0;color:var(--fg3)}
+
+footer { border-top: 1px solid var(--line); padding-block: 32px 56px; font-family: var(--f-mono); font-size: 13px; color: var(--fg3); }
+footer code { font-family: inherit; color: var(--ink); }
+footer a { color: var(--ink); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+  <a class="mark" href="#">backseat<b>.ai</b></a>
+  <ul><li class="lnk"><a href="https://github.com/pottedmeat/backseat-ai/tree/trunk/docs">docs</a></li><li><button id="tt" type="button" aria-label="Theme" title="Theme">◐</button></li><li><a class="btn" href="https://github.com/pottedmeat/backseat-ai">GitHub</a></li></ul>
+</div></nav>
+
+<section class="hero"><div class="wrap">
+  <div class="hero-copy">
+    <p class="kicker">unsolicited guidance, every mile</p>
+    <h1>A workflow in the back seat, <em>nagging</em> your agent through every step.</h1>
+    <p class="dek">Graph-based workflows for coding agents.</p>
+    <p class="lead">A workflow is a graph: states, the transitions between them, and the instructions for each. The agent reaches a state and is told what to do there and which transitions are open; anything else is refused with a reason. Most frameworks call the model and decide its next step; Backseat tells the model which steps are open and lets it choose.</p>
+    <div class="install"><button class="pill" type="button" data-copy><span class="d">$</span> npx backseat-ai init <span class="tag">COPY</span></button><a class="btn" href="https://github.com/pottedmeat/backseat-ai">GitHub →</a></div>
+    <p class="intro">The green signs on this page are snippets of one real workflow: a research lead that cuts a question into sub-tasks, sends a worker after each, and writes up what comes back.</p>
+  </div>
+  <figure class="capture">
+    <div class="sign">
+      <div class="io sent"><span class="tag">the agent sends</span><pre class="cmdline"><span class="cmd">$ node cli.ts --drive send 1b36b700…/task-1-3 queries.submit -</span></pre><pre class="payload">{
+  "queries": [
+    "Shepherd of the Hills Fish Hatchery Branson kids fishing",
+    "Table Rock Lake trout fishing Lake Taneycomo kids family",
+    "Roaring River State Park trout fishing kids Cassville Missouri",
+    "Bass Pro Shops Springfield Missouri kids fishing pond Lake Springfield"
+  ]
+}</pre></div>
+      <div class="io recv"><span class="tag">the agent receives</span><pre>You are handed one query at a time as `data.current`. Run it with whatever web search you have — this workflow provides none — read the hits yourself, and report the query done, naming the query you ran; the response hands you the next one. Keep what you find: you write the finding from it at the end and nothing here stores it for you. A query that returns nothing is still a query run — report it rather than inventing a result. If reading the hits surfaces a further query, add it to the queue. Answer the sub-question thoroughly: where a hit bears on it, read the page itself rather than the snippet, and if a page refuses you, try any other way you have of fetching it before settling for the snippet. Keep note of which facts came from snippets alone. When the last query is reported you will be moved on.
+
+<span class="h">## Data</span>
+
+- current: string
+Shepherd of the Hills Fish Hatchery Branson kids fishing
+
+<span class="h">## To move to state: searching (Queries are being worked one at a time.)</span>
+
+<span class="h">### search.results → searching (Another query is waiting.)</span>
+
+<span class="sch">    query: "Shepherd of the Hills Fish Hatchery Branson kids fishing"</span>
+
+<span class="h">### queries.add → searching (The hits surfaced a query worth running.)</span>
+
+<span class="sch">    queries: string[]   // min 1 items, each: min length 3</span>
+
+<span class="foot">---
+1b36b700…/task-1-3 · at searching · active</span></pre></div>
+    </div>
+  </figure>
+</div></section>
+
+<section class="sec tint"><div class="wrap">
+  <div class="sechead">
+    <p class="kicker">don't worry, I wrote it down</p>
+    <h2>Everything the agent is told is <em>read off</em> the notes, never the notes themselves.</h2>
+    <p class="lead">Everything the workflow knows lives in one context: the question, the round it is on, the sub-tasks still queued, the findings so far. A transition writes to it; a state reads from it. Instructions, schema and data are written as functions of context and computed each time the agent reaches a state, and the agent is handed exactly what that state declares. Nothing else in context reaches it.</p>
+  </div>
+  <div class="pair">
+    <div><p class="eyebrow"><b>you write</b> · deep-research.ts, trimmed to one write and one read</p>
+    <figure class="source"><pre><span class="k">context</span>: () =&gt; ({ question: <span class="s">''</span>, round: <span class="n">0</span>, maxRounds: <span class="n">3</span> }),
+
+planning: {
+  on: {
+    <span class="s">'plan.submit'</span>: {
+      <span class="c">// Writes to context.</span>
+      actions: assign(({ context }) =&gt; ({ round: context.round + <span class="n">1</span>, … })),
+    },
+  },
+  <span class="c">// Reads context for the agent: only these values reach it.</span>
+  <span class="k">data</span>: ({ context, event }) =&gt; ({
+    round: context.round + <span class="n">1</span>,
+    maxRounds: context.maxRounds,
+    …
+  }),
+},</pre></figure></div>
+    <div><p class="eyebrow"><b>the context</b> · internal, never shown; as the agent reaches planning</p>
+    <figure class="source"><pre>{
+  "question": <span class="s">"Where is the best place to take my kids fishing in Branson, MO?"</span>,
+  "round": <span class="n">0</span>,
+  "maxRounds": <span class="n">4</span>
+}</pre></figure></div>
+    <div><p class="eyebrow"><b>the agent sees</b> · the arrival at planning, handed only what its data declares</p>
+    <figure class="capture">
+      <div class="sign">
+        <div class="io sent"><span class="tag">the agent sends</span><pre class="cmdline"><span class="cmd">$ node cli.ts --drive send 1b36b700… brief.submit -</span></pre></div>
+        <div class="io recv"><span class="tag">the agent receives</span><pre>You are planning round `data.round` of at most `data.maxRounds`. Start broad: a first round maps the ground — which candidates, sources and angles exist — rather than trying to settle the answer, and later rounds add depth aimed at what it turns up.
+
+<span class="cut">…</span>
+
+<span class="h">## Data</span>
+
+- round: number
+1
+
+- maxRounds: number
+4
+
+<span class="cut">…</span>
+
+<span class="h">## To move to state: researching (Workers are being dispatched and are running.)</span>
+
+<span class="h">### plan.submit → researching (The round has its sub-tasks.)</span>
+
+<span class="sch">    subTasks: {</span>
+<span class="sch">      subQuestion: string   // min length 10</span>
+<span class="sch">    }[]                     // min 10 items, max 40 items</span>
+
+<span class="foot">---
+1b36b700… · at planning · active</span></pre></div>
+      </div>
+    </figure></div>
+  </div>
+</div></section>
+
+<section class="sec"><div class="wrap">
+  <div class="sechead">
+    <p class="kicker">I'll tell you what to do when we get there</p>
+    <h2>Instructions arrive <em>with</em> the state, not before it.</h2>
+    <p class="lead">Every state and every transition carries a one-line description: a clarification of what it is, read while the agent is choosing. There are no instructions in it. Instructions are what a state hands the agent by being reached, computed from context and from whether this is a first visit or a return. So the agent commits to a transition before it reads a word of what it will be asked to do there.</p>
+  </div>
+  <div class="pair">
+    <div><p class="eyebrow"><b>you write</b> · research-task.ts, trimmed to the descriptions and the instructions</p>
+    <figure class="source"><pre>searching: {
+  on: {
+    <span class="s">'search.results'</span>: {
+      target: <span class="s">'summarizing'</span>,
+      <span class="c">// A clarification of the transition, read while choosing. No instructions here.</span>
+      <span class="k">description</span>: <span class="s">'That was the last query.'</span>,
+      …
+    },
+  },
+},
+
+summarizing: {
+  <span class="c">// A clarification of the state, read while choosing. No instructions here.</span>
+  <span class="k">description</span>: <span class="s">'Every query has been answered; the sub-task needs a written finding.'</span>,
+  <span class="c">// Handed to the agent on arrival, told the context and which visit this is.</span>
+  <span class="k">instructions</span>: ({ visit }) =&gt;
+    visit === <span class="s">'first'</span>
+      ? <span class="s">'Write a finding that answers `data.subQuestion` from the hits you gathered, …'</span>
+      : <span class="s">'Conclude on `data.subQuestion`: write the finding, say that nothing supports an answer, or resume the search.'</span>,
+},</pre></figure></div>
+    <div><p class="eyebrow"><b>the agent sees, while choosing</b> · the worker's last query reported, with summarizing offered in two lines</p>
+    <figure class="capture">
+      <div class="sign">
+        <div class="io sent"><span class="tag">the agent sends</span><pre class="cmdline"><span class="cmd">$ node cli.ts --drive send 1b36b700…/task-1-3 search.results -</span></pre></div>
+        <div class="io recv"><span class="tag">the agent receives</span><pre><span class="cut">…</span>
+
+<span class="h">## To move to state: summarizing (Every query has been answered; the sub-task needs a written finding.)</span>
+
+<span class="h">### search.results → summarizing (That was the last query.)</span>
+
+<span class="cut">…</span></pre></div>
+      </div>
+    </figure></div>
+    <div><p class="eyebrow"><b>the agent sees, on arrival</b> · the worker in summarizing, handed the paragraph it could not read before</p>
+    <figure class="capture">
+      <div class="sign">
+        <div class="io sent"><span class="tag">the agent sends</span><pre class="cmdline"><span class="cmd">$ node cli.ts --drive send 1b36b700…/task-1-3 search.results -</span></pre></div>
+        <div class="io recv"><span class="tag">the agent receives</span><pre>Write a finding that answers `data.subQuestion` from the hits you gathered, listing only the sources you actually drew on. `data.question` is the research question it was cut from: it tells you what the finding will be read for, not what to answer. If the hits are too thin, or what the finding turns on rests on snippets you could still read at the source, resume the search with further queries instead. Say in the finding which facts came from snippets alone. If you have searched and nothing you found supports an answer, say so and give the reason: do not pad a finding out, and do not list a source you would not stand behind. A stated absence is worth more to the lead than a finding you do not believe.
+
+<span class="cut">…</span>
+
+<span class="h">## To move to state: complete (The sub-task is finished, with a finding or a stated absence.)</span>
+
+<span class="h">### finding.submit → complete (The sub-question is answered.)</span>
+
+<span class="h">### finding.empty → complete (Nothing found supports an answer.)</span>
+
+<span class="h">## To move to state: searching (Queries are being worked one at a time.)</span>
+
+<span class="h">### search.resume → searching (The hits do not yet answer it.)</span></pre></div>
+      </div>
+    </figure></div>
+  </div>
+</div></section>
+
+<section class="sec tint"><div class="wrap">
+  <div class="sechead">
+    <p class="kicker">we're not taking the exit until you say which one and why</p>
+    <h2>Every transition is a <em>checkpoint</em>: the agent proves it has what the next state needs.</h2>
+    <p class="lead">The schema is what the agent has to produce to get through, printed under the move while the agent is still choosing, so the proof is never a guess. It can be computed from context, so what a checkpoint asks for can depend on where the run is. A state can carry a schema of its own, the price of entering it by whichever transition arrives; the runtime extends it with the transition's, and the agent reads one contract.</p>
+  </div>
+  <div class="pair">
+    <div><p class="eyebrow"><b>you write</b> · research-task.ts, summarizing trimmed to its two exits and their schemas</p>
+    <figure class="source"><pre><span class="k">const</span> source = z.object({ url: z.url(), title: z.string().min(<span class="n">1</span>) })
+
+summarizing: {
+  on: {
+    <span class="s">'finding.submit'</span>: {
+      target: <span class="s">'complete'</span>,
+      <span class="k">description</span>: <span class="s">'The sub-question is answered.'</span>,
+      <span class="c">// The checkpoint: no finding and no source, no leaving this state.</span>
+      <span class="k">schema</span>: z.object({ summary: z.string().min(<span class="n">80</span>), sources: z.array(source).min(<span class="n">1</span>) }),
+      …
+    },
+    <span class="s">'finding.empty'</span>: {
+      target: <span class="s">'complete'</span>,
+      <span class="k">description</span>: <span class="s">'Nothing found supports an answer.'</span>,
+      <span class="c">// The other way out, with its own proof: a reason, not a shrug.</span>
+      <span class="k">schema</span>: z.object({ reason: z.string().min(<span class="n">80</span>) }),
+      …
+    },
+  },
+},</pre></figure></div>
+    <div><p class="eyebrow"><b>the agent sees</b> · the arrival at summarizing, the finding.submit it sent, and the response</p>
+    <figure class="capture">
+      <div class="sign">
+        <div class="io sent"><span class="tag">the agent sends</span><pre class="cmdline"><span class="cmd">$ node cli.ts --drive send 1b36b700…/task-1-3 search.results -</span></pre></div>
+        <div class="io recv"><span class="tag">the agent receives</span><pre><span class="cut">…</span>
+
+<span class="h">## To move to state: complete (The sub-task is finished, with a finding or a stated absence.)</span>
+
+<span class="h">### finding.submit → complete (The sub-question is answered.)</span>
+
+<span class="sch">    summary: string   // min length 80</span>
+<span class="sch">    sources: {</span>
+<span class="sch">      url: string     // uri</span>
+<span class="sch">      title: string   // min length 1</span>
+<span class="sch">    }[]               // min 1 items</span>
+
+<span class="h">### finding.empty → complete (Nothing found supports an answer.)</span>
+
+<span class="sch">    reason: string   // min length 80</span>
+
+<span class="cut">…</span></pre></div>
+      </div>
+
+      <div class="sign">
+        <div class="io sent"><span class="tag">the agent sends</span><pre class="cmdline"><span class="cmd">$ node cli.ts --drive send 1b36b700…/task-1-3 finding.submit -</span></pre><pre class="payload">{
+  "summary": "All findings come from search-result snippets only; no pages were fetched. Shepherd of the Hills Fish Hatchery (483 Hatchery Rd, Branson, 417-334-4865) is the strongest kid option: MDC runs a free Kids' Fishing Day each June around Free Fishing Weekend at the Bella Donna Education Pond, for anglers 15 and under, no registration, sunfish and channel catfish, loaner poles and worms provided (dates vary yearly, older notices only). An earlier Family Fishing Fair stocked rainbow trout with knot-tying, fly-casting and fish-cleaning stations. Guided hatchery tours run Memorial Day to Labor Day; closed Sundays, Mondays and state holidays. Roaring River State Park (about 7 miles south of Cassville, roughly an hour or more from Branson; park office 417-847-2539) holds a free Kids Fishing Day (a 2026 notice said Saturday May 16, 7am-8pm; earlier years also August), with free trout tags for children 15 and under, a youth-reserved restocked river section, volunteer help, plus a nature center, easy trails and hatchery viewing; adults need paid trout tags and a license. Bass Pro Shops Springfield has indoor catch-and-release ponds and held a free kids fishing event (June 2026 KY3 report); Springfield is about 45 miles from Branson. The name Lake Springfield turned up nothing as a kids stocked-pond venue; the nearby alternative found was Rutledge-Wilson Farm Park pond in Springfield (stocked bass, catfish, bluegill, annual kids day, fee, 2022 sources). Lake Taneycomo (trout below Table Rock Dam) is outside the hatchery scope and only noted: guides offer kid-friendly trips, but it is not a stocked pond or hatchery attraction. Event dates and prices must be confirmed.",
+  "sources": [
+    { "url": "https://mdc.mo.gov/newsroom/mdc-invites-young-anglers-kids-fishing-day-june-7-shepherd-hills", "title": "MDC invites young anglers to Kids Fishing Day at Shepherd of the Hills" },
+    { "url": "https://themissouritimes.com/shepherd-of-the-hills-hatchery-conservation-center-summer-activities/", "title": "Shepherd of the Hills Hatchery &amp; Conservation Center summer activities" },
+    { "url": "https://mdc.mo.gov/newsroom/family-fishing-fair-set-saturday-shepherd-hills-hatchery", "title": "Family Fishing Fair set Saturday at Shepherd of the Hills Hatchery" },
+    { "url": "https://mdc.mo.gov/fishing/fishing-prospects/areas/roaring-river-state-park", "title": "Roaring River State Park - MDC fishing prospects" },
+    { "url": "https://ksisradio.com/take-a-day-trip-for-free-kids-fishing-at-roaring-river/", "title": "Take A Day Trip For Free Kids Fishing At Roaring River" },
+    { "url": "https://www.ky3.com/2026/06/11/bass-pro-shops-donates-fishing-rods-kids/", "title": "Bass Pro Shops donates fishing rods to kids" },
+    { "url": "https://www.ky3.com/2022/04/06/moms-money-fishing-rutledge-wilson-farm-park", "title": "Moms and Money: Fishing at Rutledge-Wilson Farm Park" }
+  ]
+}</pre></div>
+        <div class="io recv"><span class="tag">the agent receives</span><pre>The result is reported to the lead. Nothing further is asked of you here.
+
+This actor is done. Nothing more can be sent.
+
+<span class="foot">---
+1b36b700…/task-1-3 · at complete · done</span></pre></div>
+      </div>
+    </figure></div>
+  </div>
+</div></section>
+
+<section class="sec"><div class="wrap">
+  <div class="sechead">
+    <p class="kicker">hold on, I've got a gadget for that</p>
+    <h2>The workflow brings its <em>own</em> tools, and uses them on the way.</h2>
+    <p class="lead">Some of the work in a workflow is not the agent's to do: a lookup, a call to a service, a judgment the workflow would rather make itself. Backseat puts that work on the transition, as an effect: it runs when the agent takes the move, after the checks have passed. Whatever the tool brings back rides the event, and the author decides what of it goes into context and what goes straight to the agent. The agent sends the event and reads what came back; it never holds the tool.</p>
+  </div>
+  <div class="pair">
+    <div><p class="eyebrow"><b>you write</b> · deep-research.ts, trimmed to the effect and what reads it</p>
+    <figure class="source"><pre><span class="k">type</span> LeadEvent =
+  | { <span class="k">type</span>: <span class="s">'brief.submit'</span>; question: string; output: { rounds: number; budget: string } }
+  …
+
+briefing: {
+  on: {
+    <span class="s">'brief.submit'</span>: {
+      target: <span class="s">'planning'</span>,
+      <span class="k">schema</span>: z.object({ question: z.string().min(<span class="n">10</span>) }),
+      <span class="c">// The effect: how many rounds the question warrants, judged from the question, not set by the agent.</span>
+      <span class="k">effect</span>: ({ event }) =&gt; judgeMaxRounds(event.question),
+      <span class="c">// event.output is what the effect returned. The actions keep the part the run needs later.</span>
+      actions: assign({
+        question: ({ event }) =&gt; event.question,
+        maxRounds: ({ event }) =&gt; event.output.rounds,
+      }),
+    },
+  },
+},
+
+planning: {
+  <span class="c">// The landing state's data: the budget from context on every visit, and once, from the effect, why it is what it is.</span>
+  <span class="k">data</span>: ({ context, event }) =&gt; ({
+    round: context.round + <span class="n">1</span>,
+    maxRounds: context.maxRounds,
+    ...(event?.<span class="k">type</span> === <span class="s">'brief.submit'</span> &amp;&amp; { budget: event.output.budget }),
+  }),
+  …
+},</pre></figure></div>
+    <div><p class="eyebrow"><b>the agent sees</b> · the brief.submit it sent, and the arrival at planning</p>
+    <figure class="capture">
+      <div class="sign">
+        <div class="io sent"><span class="tag">the agent sends</span><pre class="cmdline"><span class="cmd">$ node cli.ts --drive send 1b36b700… brief.submit -</span></pre><pre class="payload">{
+  "question": "Where is the best place to take my kids fishing in Branson, MO?"
+}</pre></div>
+        <div class="io recv"><span class="tag">the agent receives</span><pre><span class="cut">…</span>
+
+<span class="h">## Data</span>
+
+- round: number
+1
+
+- maxRounds: number
+4
+
+- budget: string
+Four rounds at most: the candidates have to be found first, then each examined in turn.
+
+<span class="cut">…</span>
+
+<span class="foot">---
+1b36b700… · at planning · active</span></pre></div>
+      </div>
+    </figure></div>
+  </div>
+</div></section>
+
+<section class="sec tint"><div class="wrap">
+  <div class="sechead">
+    <p class="kicker">you drive, I'll keep track</p>
+    <h2>The workflow keeps the <em>record</em>; the agent is read the part it needs, where it needs it.</h2>
+    <p class="lead">Context is the run's one record: what the agent sent, what an effect brought back, what an action worked out, each kept as it was written for as long as the run lasts. A state can declare data: the part of that record the agent is handed while it is there, on every visit. A line written on the first call reads the same on the sixty-ninth, after six workers have come and gone, so the agent is shown the record, not its recollection of it. Any agent holding the actor's id reads the same record with <code>snapshot</code>. What a state does not declare stays hidden.</p>
+  </div>
+  <div class="pair">
+    <div><p class="eyebrow"><b>you write</b> · deep-research.ts, briefing and reviewing, trimmed to the writes and the read</p>
+    <figure class="source"><pre>briefing: {
+  on: {
+    <span class="s">'brief.submit'</span>: {
+      target: <span class="s">'planning'</span>,
+      <span class="k">schema</span>: z.object({ question: z.string().min(<span class="n">10</span>) }),
+      <span class="k">effect</span>: ({ event }) =&gt; judgeMaxRounds(event.question),
+      <span class="c">// Two lines of the record: what the agent sent, and what the effect judged.</span>
+      actions: assign({
+        question: ({ event }) =&gt; event.question,
+        maxRounds: ({ event }) =&gt; event.output.rounds,
+      }),
+    },
+  },
+},
+
+…
+
+reviewing: {
+  <span class="c">// Sixty-six calls and six workers later: the record as written, down to what the workers reported.</span>
+  <span class="k">data</span>: ({ context: { question, round, maxRounds, findings, unanswerable, failed } }) =&gt;
+    ({ question, round, maxRounds, findings: withFiles(findings), unanswerable, failed }),
+  …
+},</pre></figure></div>
+    <div><p class="eyebrow"><b>the agent sees</b> · the brief.submit it sent, and the arrival at reviewing</p>
+    <figure class="capture">
+      <div class="sign">
+        <div class="io sent"><span class="tag">the agent sends</span><pre class="cmdline"><span class="cmd">$ node cli.ts --drive send 1b36b700… brief.submit -</span></pre><pre class="payload">{
+  "question": "Where is the best place to take my kids fishing in Branson, MO?"
+}</pre></div>
+      </div>
+
+      <div class="sign">
+        <div class="io sent"><span class="tag">the agent sends</span><pre class="cmdline"><span class="cmd">$ node cli.ts --drive send 1b36b700… research.review</span></pre></div>
+        <div class="io recv"><span class="tag">the agent receives</span><pre><span class="cut">…</span>
+
+<span class="h">## Data</span>
+
+- question: string
+Where is the best place to take my kids fishing in Branson, MO?
+
+- round: number
+1
+
+- maxRounds: number
+4
+
+- findings: array
+```json
+[
+  {
+    "actorId": "1b36b700…/task-1-1",
+    "subQuestion": "Which Branson-area fishing spots are free or low-cost, with fishing docks, piers or bank access suitable for young children (e.g., Table Rock State Park dock, Moonshine Beach, Branson Landing)? Cover only access, safety and cost, not guided trips.",
+    "sources": [
+      {
+        "url": "https://visitmo.com/things-to-do/lilleys-landing-marina",
+        "title": "Things to Do - Lilleys' Landing Marina (VisitMO)"
+      },
+      <span class="cut">…</span>
+    ],
+    "file": "…/task-1-1.md"
+  },
+  <span class="cut">…</span>
+]
+```
+
+- unanswerable: array
+```json
+[]
+```
+
+- failed: array
+```json
+[]
+```
+
+<span class="cut">…</span>
+
+<span class="foot">---
+1b36b700… · at reviewing · active</span></pre></div>
+      </div>
+    </figure></div>
+  </div>
+</div></section>
+
+<section class="sec"><div class="wrap">
+  <div class="sechead">
+    <p class="kicker">here's who to call and what to tell them</p>
+    <h2>The workflow writes the list; the agent makes the <em>calls</em>.</h2>
+    <p class="lead">A subagent that needs a workflow of its own gets one, with a context of its own. The agent makes the call. It starts the subagent in its own harness and tells it to run the listed command, and that is the whole handoff, because once in the seat the subagent has a backseat driver of its own, with its own instructions, its own refusals and its own record, told only its <code>input</code>. When it is done, Backseat collects its output and merges it into the parent's context at the workflow's discretion. Only what the calling agent needs is surfaced to it.</p>
+  </div>
+  <div class="pair">
+    <div><p class="eyebrow"><b>you write</b> · deep-research.ts, the roster and researching, trimmed to the spawn and the two events</p>
+    <figure class="source"><pre><span class="k">import</span> { researchTask } <span class="k">from</span> <span class="s">'./research-task.ts'</span>   <span class="c">// a machine of its own: the subagent's workflow</span>
+
+<span class="c">// The roster: the machines this workflow can spawn, each under the name its spawns and collections use.</span>
+<span class="k">actors</span>: { researchTask },
+
+…
+
+researching: {
+  …
+  <span class="c">// Spawned on arrival, as an entry action.</span>
+  <span class="k">entry</span>: spawnChild(<span class="s">'researchTask'</span>, {
+    id: ({ context }) =&gt; <span class="s">`task-${context.round}-${context.dispatched}`</span>,
+    <span class="c">// For the agent: what this subagent was sent for, read out on the call that spawns it.</span>
+    <span class="k">about</span>: ({ context }) =&gt; context.current?.subQuestion ?? <span class="s">'(no sub-question)'</span>,
+    <span class="c">// For the subagent: the context its own workflow starts with. Nothing else of the parent's reaches it.</span>
+    <span class="k">input</span>: ({ context }) =&gt; ({ subQuestion: context.current?.subQuestion ?? <span class="s">''</span>, question: context.question }),
+  }),
+  on: {
+    <span class="c">// The next sub-task: re-enter, and spawn again.</span>
+    <span class="s">'task.next'</span>: { guard: hasPending, target: <span class="s">'researching'</span>, reenter: <span class="n">true</span>, actions: assign(takeTask) },
+    <span class="c">// Held until every subagent spawned here has settled. What enters the parent's context is the workflow's call.</span>
+    <span class="s">'research.review'</span>: {
+      guard: queueDrained,
+      target: <span class="s">'reviewing'</span>,
+      actions: collectChildren(<span class="s">'researching'</span>, <span class="s">'researchTask'</span>, assign(({ context, event }) =&gt; {
+        <span class="k">const</span> findings = [...context.findings]
+        <span class="k">for</span> (<span class="k">const</span> site <span class="k">of</span> event.settled)
+          <span class="k">for</span> (<span class="k">const</span> child <span class="k">of</span> site.children) {
+            <span class="k">const</span> report = child.status === <span class="s">'done'</span> ? asReport(child.output) : <span class="n">null</span>
+            …
+            findings.push({ actorId: child.actorId, subQuestion: report.subQuestion, sources: report.sources })
+          }
+        <span class="k">return</span> { findings, … }
+      })),
+    },
+  },
+},</pre></figure></div>
+    <div><p class="eyebrow"><b>the agent sees</b> · the arrival at researching with the first subagent spawned</p>
+    <figure class="capture">
+      <div class="sign">
+        <div class="io sent"><span class="tag">the agent sends</span><pre class="cmdline"><span class="cmd">$ node cli.ts --drive send 1b36b700… plan.submit -</span></pre></div>
+        <div class="io recv"><span class="tag">the agent receives</span><pre>This machine picked which of your proposed sub-tasks run this round, and in what order; those not picked are not run, and you may propose them again in a later round. For each one, spawn a subagent and tell it to run the listed command: each worker's searches and pages then stay out of your context, and the workers run side by side. Keep dispatching while another sub-task is offered, then wait until all of your subagents are complete before moving to review.
+
+<span class="h">## To move to state: researching (Workers are being dispatched and are running.)</span>
+
+<span class="h">### task.next → researching (Another sub-task is waiting to be dispatched.)</span>
+
+<span class="sch">    no payload</span>
+
+<span class="h">## Subagents to start</span>
+
+- 1b36b700…/task-1-1 — Which Branson-area fishing spots are free or low-cost, with fishing docks, piers or bank access suitable for young children (e.g., Table Rock State Park dock, Moonshine Beach, Branson Landing)? Cover only access, safety and cost, not guided trips.
+  `node cli.ts --drive snapshot 1b36b700…/task-1-1`
+
+<span class="foot">---
+1b36b700… · at researching · active</span></pre></div>
+      </div>
+    </figure></div>
+    <div><p class="eyebrow"><b>the subagent sees</b> · the snapshot its driver was told to run: its own first arrival, a record of two keys, nothing of the parent's</p>
+    <figure class="capture">
+      <div class="sign">
+        <div class="io sent"><span class="tag">the subagent sends</span><pre class="cmdline"><span class="cmd">$ node cli.ts --drive snapshot 1b36b700…/task-1-3</span></pre></div>
+        <div class="io recv"><span class="tag">the subagent receives</span><pre>You have been handed this actor for `data.subQuestion`. Propose 2-5 search queries that together answer it. Each must stand alone as a search string. `data.question` is the research question your sub-question was cut from: it is there so you know what your finding will be read for, and is not yours to answer.
+
+<span class="h">## Data</span>
+
+- question: string
+Where is the best place to take my kids fishing in Branson, MO?
+
+- subQuestion: string
+Are there stocked ponds, trout parks or hatchery attractions near Branson (Shepherd of the Hills Fish Hatchery, Bass Pro Shops, Lake Springfield, Roaring River State Park) good for kids? Cover only these hatchery and stocked-water options.
+
+<span class="h">## To move to state: searching (Queries are being worked one at a time.)</span>
+
+<span class="h">### queries.submit → searching (The queries are chosen.)</span>
+
+<span class="sch">    queries: string[]   // min 2 items, max 5 items, each: min length 3</span>
+
+<span class="cut">…</span>
+
+<span class="foot">---
+1b36b700…/task-1-3 · at briefing · active</span></pre></div>
+      </div>
+    </figure></div>
+  </div>
+</div></section>
+
+<section class="sec tint"><div class="wrap">
+  <div class="sechead">
+    <p class="kicker">I storyboarded the whole trip</p>
+    <h2>Your workflow, <em>notes</em> and all, in the XState machine viewer.</h2>
+    <p class="lead">Backseat is built on XState, and Stately Studio draws XState: the states, the transitions between them, laid out and connected. Everything Backseat adds, the instructions, the payloads, the data, is rendered into the descriptions, so the drawing says what each state will say to the agent. It is for looking at. Nothing reads it back.</p>
+  </div>
+  <div class="pair">
+    <div><p class="eyebrow"><b>you write</b> · one command, and a file per machine to import</p>
+    <div class="asphalt term"><pre><span class="k">$ node cli.ts stately</span>
+<b>…/deep-research.stately.ts
+…/deep-research.researchTask.stately.ts</b></pre></div></div>
+    <div><p class="eyebrow"><b>you see</b> · the lead machine drawn in Stately Studio, briefing through drafting</p>
+    <figure class="shot"><img class="light" src="/stately-light.png" width="3646" height="2134" alt="Stately Studio drawing the deep-research lead machine: briefing, planning, researching, reviewing and drafting, each with its description and instructions, with the spawn edge to the research task" loading="lazy"><img class="dark" src="/stately-dark.png" width="3646" height="2134" alt="" loading="lazy"></figure></div>
+  </div>
+</div></section>
+
+<section class="sec"><div class="wrap">
+  <div class="sechead">
+    <p class="kicker">I'll tell you everything, once we're on the road</p>
+    <h2>The agent reads nothing before it starts and, even then, only what it <em>needs</em>.</h2>
+    <p class="lead">Most agents start under a wall of instructions: every rule, every step, every case, read before anything has happened and carried through everything after. Here there is nothing to read first. The agent starts the workflow, and from then on it is told what it needs when it needs it: what to do in the state it is in, which transitions are open from there, and nothing about the rest of the workflow until it gets there.</p>
+  </div>
+  <div class="asphalt term"><pre><span class="k">$ node cli.ts --drive create deep-research</span></pre></div>
+</div></section>
+
+<section class="sec tint"><div class="wrap">
+  <div class="sechead">
+    <p class="kicker">you know this neighborhood</p>
+    <h2>Instructions <em>adapt</em> to the visit.</h2>
+    <p class="lead">A state's instructions are told which visit this is, and say what that visit needs. Here the first visit explains the whole job; every return, with that explanation still in the agent's context, gets one line that points back to it.</p>
+  </div>
+  <div class="pair">
+    <div><p class="eyebrow"><b>you write</b> · research-task.ts, the worker's searching state, cut to its instructions</p>
+    <figure class="source"><pre>searching: {
+  <span class="k">description</span>: <span class="s">'Queries are being worked one at a time.'</span>,
+  <span class="k">instructions</span>: ({ visit }) =&gt;
+    visit === <span class="s">'first'</span>
+      <span class="c">// the first visit</span>
+      ? <span class="s">'You are handed one query at a time as `data.current`. Run it with whatever web search you have …'</span>
+      <span class="c">// every visit after</span>
+      : <span class="s">'Run `data.current` and report it done, naming the query.'</span>,</pre></figure></div>
+  </div>
+</div></section>
+
+<section class="sec"><div class="wrap">
+  <div class="sechead">
+    <p class="kicker">I looked it up. they're closed</p>
+    <h2>Some reasons to refuse only turn up <em>mid-move</em>.</h2>
+    <p class="lead">While a guard can keep a transition from being shown, some reasons to refuse are only found partway through the move: an effect or an action finds one, and says so in the author's words. The workflow rejects the event with that message, says the actor has not moved, and prints the arrival again, so the next call is the corrected one.</p>
+  </div>
+  <div class="pair">
+    <div><p class="eyebrow"><b>you write</b> · research-task.ts, the worker's finding.submit, with the effect that checks its sources</p>
+    <figure class="source"><pre><span class="k">import</span> { backseat, RejectedEvent } <span class="k">from</span> <span class="s">'backseat-ai'</span>
+
+<span class="s">'finding.submit'</span>: {
+  target: <span class="s">'complete'</span>,
+  <span class="k">description</span>: <span class="s">'The sub-question is answered.'</span>,
+  <span class="k">schema</span>: z.object({ summary: z.string().min(<span class="n">80</span>), sources: z.array(source).min(<span class="n">1</span>) }),
+  <span class="c">// The sources are checked at the source: a run once accepted a citation its own title called "page 404'd".</span>
+  <span class="c">// Only a page the server says is gone is refused; any other status, and any failure to reach it, passes,</span>
+  <span class="c">// since a page that blocks bots is not a page that is gone. Some servers answer HEAD with 404 and GET with the</span>
+  <span class="c">// page, so a HEAD that says gone is confirmed with a GET.</span>
+  <span class="k">effect</span>: <span class="k">async</span> ({ event }) => {
+    <span class="k">const</span> statusOf = (url: string, method: <span class="s">'HEAD'</span> | <span class="s">'GET'</span>) =>
+      fetch(url, { method, signal: AbortSignal.timeout(<span class="n">10_000</span>) }).then(
+        (res) => (res.body?.cancel(), res.status),
+        () => <span class="n">0</span>,
+      )
+    <span class="k">const</span> gone = <span class="k">await</span> Promise.all(
+      event.sources.map(<span class="k">async</span> ({ url }) => {
+        <span class="k">const</span> head = <span class="k">await</span> statusOf(url, <span class="s">'HEAD'</span>)
+        <span class="k">const</span> status = head === <span class="n">404</span> || head === <span class="n">410</span> ? <span class="k">await</span> statusOf(url, <span class="s">'GET'</span>) : head
+        <span class="k">return</span> status === <span class="n">404</span> || status === <span class="n">410</span>
+          ? <span class="s">`${url} is gone (HTTP ${status}). Cite the page you read instead, or drop it and say what rested on it.`</span>
+          : <span class="k">null</span>
+      }),
+    )
+    <span class="k">const</span> reasons = gone.filter((reason) => reason !== <span class="k">null</span>)
+    <span class="k">if</span> (reasons.length > <span class="n">0</span>) <span class="k">throw new</span> RejectedEvent(reasons.join(<span class="s">'\n'</span>))
+  },
+  actions: assign({ summary: ({ event }) => event.summary, sources: ({ event }) => event.sources }),
+},</pre></figure></div>
+    <div><p class="eyebrow"><b>the agent sees</b> · the worker's finding, refused on a source that is gone</p>
+    <!-- STAGED: not from run 1. Real output of finding.submit refused on a gone source, driven in a scratch state dir on 2026-11-07, with the actor id set to run 1's task-1-3. Run 1 (1b36b700…) has no such refusal. Gone source: https://mdc.mo.gov/events/kids-fishing-day-shepherd-hills-hatchery-2019, curl HEAD 404 and GET 404; the effect's check is HEAD, confirmed by GET on a 404 or 410. -->
+    <figure class="capture">
+      <div class="sign">
+        <div class="io sent"><span class="tag">the agent sends</span><pre class="cmdline"><span class="cmd">$ node cli.ts --drive send 1b36b700…/task-1-3 finding.submit -</span></pre><pre class="payload">{
+  "summary": "All findings come from search-result snippets only; no pages were fetched. …",
+  "sources": [
+    { "url": "https://mdc.mo.gov/newsroom/mdc-invites-young-anglers-kids-fishing-day-june-7-shepherd-hills", "title": "MDC invites young anglers to Kids Fishing Day at Shepherd of the Hills" },
+    { "url": "https://themissouritimes.com/shepherd-of-the-hills-hatchery-conservation-center-summer-activities/", "title": "Shepherd of the Hills Hatchery &amp; Conservation Center summer activities" },
+    …
+    { "url": "https://mdc.mo.gov/events/kids-fishing-day-shepherd-hills-hatchery-2019", "title": "Kids Fishing Day at Shepherd of the Hills Fish Hatchery" }
+  ]
+}</pre></div>
+        <div class="io recv"><span class="tag">the agent receives</span><pre>Rejected: https://mdc.mo.gov/events/kids-fishing-day-shepherd-hills-hatchery-2019 is gone (HTTP 404). Cite the page you read instead, or drop it and say what rested on it.
+
+<span class="nomove">The actor has not moved.</span>
+
+Conclude on `data.subQuestion`: write the finding, say that nothing supports an answer, or resume the search.
+
+<span class="cut">…</span>
+
+Offered — each shown in full on an earlier response in this state; call describe &lt;event&gt; to see one whole:
+
+- finding.submit → complete
+- finding.empty → complete
+- search.resume → searching
+
+<span class="foot">---
+1b36b700…/task-1-3 · at summarizing · active</span></pre></div>
+      </div>
+    </figure></div>
+  </div>
+</div></section>
+
+<section class="sec tint"><div class="wrap">
+  <div class="sechead">
+    <p class="kicker">we're not leaving until everyone's back in the car</p>
+    <h2>The workflow <em>continues</em> until the subagents' work is needed.</h2>
+    <p class="lead">While the subagents work, the workflow keeps going. The first move that needs what they produce is held until all of them have finished. Sent early, it is refused, naming the subagents still incomplete. Sent once they are back, it brings their work into context.</p>
+  </div>
+  <div class="pair">
+    <div><p class="eyebrow"><b>you write</b> · report.ts, the two states of a minimal report workflow: titling spawns two writers, awaiting collects what they wrote</p>
+    <figure class="source"><pre>titling: {
+  <span class="k">description</span>: <span class="s">'The title is being written while the sections are.'</span>,
+  <span class="c">// Two subagents, one per section, started as the agent arrives.</span>
+  <span class="k">entry</span>: [
+    spawnChild(<span class="s">'writer'</span>, { id: () =&gt; <span class="s">'introduction'</span>, input: () =&gt; ({ section: <span class="s">'introduction'</span> }) }),
+    spawnChild(<span class="s">'writer'</span>, { id: () =&gt; <span class="s">'findings'</span>, input: () =&gt; ({ section: <span class="s">'findings'</span> }) }),
+  ],
+  <span class="k">instructions</span>: <span class="s">'Two subagents are writing the sections: start each with the command listed for it, then write the title yourself.'</span>,
+  on: {
+    <span class="s">'title.submit'</span>: { target: <span class="s">'awaiting'</span>, schema: z.object({ title: z.string().min(<span class="n">3</span>) }), actions: assign({ title: ({ event }) =&gt; event.title }) },
+  },
+},
+<span class="c">// Reached while the sections are still being written. Nothing here needs them yet.</span>
+awaiting: {
+  <span class="k">description</span>: <span class="s">'The title is set; the sections are still being written.'</span>,
+  <span class="k">instructions</span>: <span class="s">'Wait for both subagents to finish, then assemble the report.'</span>,
+  <span class="k">data</span>: ({ context: { title } }) =&gt; ({ title }),
+  on: {
+    <span class="s">'sections.assemble'</span>: {
+      target: <span class="s">'assembled'</span>,
+      <span class="c">// The first move that needs the sections. Not offered until both writers have settled; sent before that,</span>
+      <span class="c">// it is refused, naming the ones still out. Taken, it brings what they wrote into context.</span>
+      actions: collectChildren(<span class="s">'titling'</span>, <span class="s">'writer'</span>, assign({
+        sections: ({ event }) =&gt; event.settled.flatMap((site) =&gt; site.children.map((child) =&gt; child.output)),
+      })),
+    },
+  },
+},</pre></figure></div>
+  </div>
+</div></section>
+
+<section class="sec"><div class="wrap">
+  <div class="sechead">
+    <p class="kicker">sit down, I made a slideshow of the trip</p>
+    <h2>Every call is in the <em>record</em>, and the report walks you through it.</h2>
+    <p class="lead">Every call an agent makes lands in the record: the state the actor was in, the move it took or was refused and the reason, and what an effect brought back. The trace report draws each actor's journey from it, the states it stopped in and the calls answered from each. A run is assessed from the workflow's record, never from the agent's account. That is how a workflow improves: a wrong turn sits under one state, so the instructions to fix are that state's. Fix them, run again, and the next report says whether it worked.</p>
+  </div>
+  <div class="pair">
+    <div><p class="eyebrow"><b>you see</b> · the trace report for run 1, the lead's journey, the refused call selected</p>
+    <div class="asphalt card term">
+      <div class="strip"><span class="pre"><span class="d">$</span> npx backseat-ai report</span></div>
+<pre><span class="p">#  machine        root      status  started           last call         calls  undeclared  where</span>
+<b>1  deep-research  1b36b700  done    2026-11-07 13:23  2026-11-07 13:26  72                 completed</b>
+Report which run? [1-1] <span class="k">1</span>
+<b>…/runs/1b36b700…/trace.html (72 calls)</b></pre>
+    </div>
+    <figure class="trace">
+      <div class="head"><span class="run">deep-research run</span><span><b>72</b> calls</span><span><b>8</b> actors</span><span><b>182.1 s</b> wall</span><span><b>2</b> rejected</span><span><b>1</b> error</span><span class="root"><code>1b36b700…</code> <b>done</b></span></div>
+      <div class="panes">
+        <div class="chain">
+          <div class="stop">
+            <h3>briefing<small>created</small></h3>
+            <p class="offered">offered <code>brief.submit</code></p>
+            <ul>
+              <li><span class="t">+4.4 s</span><span class="n">2</span><code>create</code><span class="why">created</span></li>
+              <li class="move"><span class="t">+9.2 s</span><span class="n">3</span><code>send brief.submit</code><span class="why">→ planning</span></li>
+            </ul>
+          </div>
+          <div class="stop">
+            <h3>planning<small>after brief.submit</small></h3>
+            <p class="steps"><code>brief.submit</code> → planning</p>
+            <p class="offered">offered <code>plan.submit</code></p>
+            <ul>
+              <li class="move"><span class="t">+23.0 s</span><span class="n">4</span><code>send plan.submit</code><span class="why">→ researching</span></li>
+            </ul>
+          </div>
+          <div class="stop">
+            <h3>researching<small>after plan.submit</small></h3>
+            <p class="steps"><code>plan.submit</code> → researching</p>
+            <p class="offered">offered <code>research.review</code></p>
+            <ul>
+              <li><span class="t">+29.0 s</span><span class="n">5</span><code>send task.next</code><span class="why">stayed, spawned task-1-2</span></li>
+              <li><span class="t">+33.2 s</span><span class="n">7</span><code>send task.next</code><span class="why">stayed, spawned task-1-3</span></li>
+              <li><span class="t">+33.4 s</span><span class="n">8</span><code>send task.next</code><span class="why">stayed, spawned task-1-4</span></li>
+              <li><span class="t">+33.5 s</span><span class="n">9</span><code>send task.next</code><span class="why">stayed, spawned task-1-5</span></li>
+              <li><span class="t">+33.7 s</span><span class="n">10</span><code>send task.next</code><span class="why">stayed, spawned task-1-6</span></li>
+              <li class="on"><span class="t">+33.9 s</span><span class="n">11</span><code>send task.next</code><span class="why"><span class="rej">rejected</span> not-enabled</span></li>
+              <li><span class="t">+34.0 s</span><span class="n">12</span><code>send task.next</code><span class="why"><span class="rej">rejected</span> not-enabled</span></li>
+              <li><span class="t">+129.7 s</span><span class="n">48</span><code>snapshot</code><span class="why">stayed</span></li>
+              <li><span class="cut">…</span></li>
+              <li><span class="t">+160.2 s</span><span class="n">68</span><code>snapshot</code><span class="why">stayed</span></li>
+              <li class="move"><span class="t">+162.8 s</span><span class="n">69</span><code>send research.review</code><span class="why">→ reviewing</span></li>
+            </ul>
+          </div>
+          <div class="stop">
+            <h3>reviewing<small>after research.review</small></h3>
+            <p class="steps"><code>research.review</code><span class="if">if</span><code>queueDrained</code> → reviewing</p>
+            <p class="offered">offered <code>round.again</code> <code>research.conclude</code></p>
+            <ul>
+              <li class="move"><span class="t">+169.0 s</span><span class="n">70</span><code>send research.conclude</code><span class="why">→ drafting</span></li>
+            </ul>
+          </div>
+          <div class="stop">
+            <h3>drafting<small>after research.conclude</small></h3>
+            <p class="steps"><code>research.conclude</code> → drafting</p>
+            <p class="offered">offered <code>draft.submit</code></p>
+            <ul>
+              <li class="move"><span class="t">+176.4 s</span><span class="n">71</span><code>send draft.submit</code><span class="why">→ citing.awaiting</span></li>
+            </ul>
+          </div>
+          <div class="stop">
+            <h3>citing.awaiting<small>after draft.submit</small></h3>
+            <p class="steps"><code>draft.submit</code> → citing</p>
+            <p class="offered">offered <code>citations.submit</code></p>
+            <ul>
+              <li class="move"><span class="t">+182.0 s</span><span class="n">72</span><code>send citations.submit</code><span class="why">→ complete</span></li>
+            </ul>
+          </div>
+          <div class="stop">
+            <h3>complete<small>after citations.submit · done</small></h3>
+            <p class="steps"><code>citations.submit</code> → citing.checking then <code>always</code><span class="if">if</span><code>citationsHold</code> → citing.accepted then <code>xstate.done.state.deepResearch.citing</code> → complete</p>
+          </div>
+        </div>
+        <div class="detail">
+          <h3>#11 node cli.ts --drive send 1b36b700… task.next</h3>
+          <p class="grp">Sent</p>
+          <div class="row"><span class="key">command</span><span>node cli.ts --drive send</span></div>
+          <div class="row"><span class="key">event</span><span>task.next</span></div>
+          <div class="row"><span class="key">actor</span><span><span class="chip">deep-research</span>1b36b700…</span></div>
+          <div class="row"><span class="key">timing</span><span>+33.9 s, took 7 ms, exit 2</span></div>
+          <p class="lbl">payload</p>
+<pre class="block">{}</pre>
+          <p class="grp">Response</p>
+          <p class="lbl">rejected</p>
+          <div class="issue"><b>not-enabled</b></div>
+          <p class="lbl">Left at</p>
+          <p class="pos"><code>researching</code><span class="st">active</span></p>
+          <p class="more">…</p>
+        </div>
+      </div>
+    </figure></div>
+  </div>
+</div></section>
+
+<section class="sec tint"><div class="wrap">
+  <div class="sechead prose">
+    <p class="kicker">I've seen how you drive without me</p>
+    <h2>A workflow that is <em>enforced</em>, not described.</h2>
+    <p class="lead">Backseat came from wanting more from workflows that ran on instructions alone. Each was a long prompt describing the steps, and even a frontier model treated it as a description: mostly followed, never enforced. The want was a workflow that holds its shape whichever model is in it.</p>
+    <p class="body">So the shape is written down and enforced. You decide what can happen: the states, the transitions out of each, the guard on each one, the schema it must be sent with. The model decides what does. The workflow is semi-deterministic: every step is fixed, and the rest is the model's judgment, what it does inside the step it is in and, where more than one transition is open, which one it takes.</p>
+    <p class="body">A model handed one step at a time, with its instructions and its schema, and refused with a reason when it strays, runs a workflow it could not have run from the prompt. It does not have to be a frontier model. A cheaper one, in the same workflow, handles multi-step work it could not on its own.</p>
+  </div>
+</div></section>
+
+<section class="sec"><div class="wrap">
+  <div class="sechead">
+    <p class="kicker">three roads. all of them signposted</p>
+    <h2>Every command says <em>where</em> it runs.</h2>
+    <p class="lead">One command comes with the package and reads no project: <code>npx backseat-ai</code>. Everything that reads your machines runs through your project's own <code>cli.ts</code>, which <code>init</code> writes: your commands plainly, the agent's under <code>--drive</code>.</p>
+  </div>
+  <div class="cards">
+    <div class="asphalt card">
+      <div class="strip"><span class="pre">npx backseat-ai <i>…</i></span><span class="sub">from anywhere · reads no project</span></div>
+      <div class="row"><span class="c">init</span><span class="g">Sets the working directory up as a project: package.json, tsconfig.json, cli.ts and a catalog. Finishes whatever is missing; replaces nothing you wrote without a yes.</span></div>
+      <div class="row"><span class="c">report</span><span class="g">Lists the runs it can find and renders one as a trace report. <code>report &lt;prefix&gt;</code> picks a run by its root id; <code>report &lt;dir&gt;</code> renders any directory holding a trace.</span></div>
+      <div class="row"><span class="c">output <i>&lt;actorId&gt;</i></span><span class="g">Prints a finished actor's output.</span></div>
+      <div class="row"><span class="c">doctor</span><span class="g">Proposes removing live runs nobody has touched in 14 days.</span></div>
+    </div>
+    <div class="asphalt card">
+      <div class="strip"><span class="pre">node cli.ts <i>…</i></span><span class="sub">in your project · your project's front</span></div>
+      <div class="row"><span class="c">lint</span><span class="g">Reports what the style rules can establish about each machine of the project.</span></div>
+      <div class="row"><span class="c">stately</span><span class="g">Writes each machine, and the machines it spawns, as a file to import into Stately Studio.</span></div>
+    </div>
+    <div class="asphalt card">
+      <div class="strip"><span class="pre">node cli.ts --drive <i>…</i></span><span class="sub">the agent's tool · the same front, under --drive</span></div>
+      <div class="row"><span class="c">create <i>&lt;machine&gt;</i></span><span class="g">Starts a fresh actor. The response is its id, its state and the transitions enabled from there.</span></div>
+      <div class="row"><span class="c">send <i>&lt;actorId&gt; &lt;event&gt; [payload | -]</i></span><span class="g">The only way to move an actor. Payload keys follow the schema shown for that event; <code>-</code> reads the JSON from stdin.</span></div>
+      <div class="row"><span class="c">snapshot <i>&lt;actorId&gt;</i></span><span class="g">The current state and enabled transitions, unchanged. How to orient when handed an id.</span></div>
+      <div class="row"><span class="c">describe <i>&lt;actorId&gt; [&lt;event&gt;]</i></span><span class="g">With an event, that one move and its schema; without, the current state with its full first-arrival instructions.</span></div>
+    </div>
+  </div>
+</div></section>
+
+<section class="sec tint"><div class="wrap">
+  <div class="sechead">
+    <p class="kicker">scoot over. I'm getting in the back</p>
+    <h2>One command, and the back seat is <em>taken</em>.</h2>
+    <p class="lead"><code>init</code> sets the directory up as a project and, with no machine to find in your source, offers a starter: one state, one move, then finished. Run it again any time; it finishes what is missing and leaves the rest alone. For the coding agent that writes your workflows, <code>npx skills add pottedmeat/backseat-ai --skill backseat-ai</code> installs a companion skill.</p>
+  </div>
+  <div class="asphalt card term">
+    <div class="strip"><span class="pre"><span class="d">$</span> npx backseat-ai init</span><button class="tag" type="button" data-copy>COPY</button></div>
+<!-- PLACEHOLDER: the lines below are `init my-agent --starter` as recorded
+     2026-10-12 inside the repo, before backseat-ai was on npm and before `init`'s gate line spelled `node cli.ts --drive`. Re-record outside the repo once the package is
+     published and replace this <pre> with what init prints; see site-src/README.md. -->
+<pre><b>created   package.json — my-agent
+updated   scripts.drive — node cli.ts --drive
+updated   scripts.backseat — node cli.ts
+updated   scripts.typecheck — tsc</b>
+<span class="p">$ pnpm add backseat-ai@workspace:* xstate@^5.32.6 zod@^4.5.4</span>
+<span class="cut">…</span>
+<b>updated   dependencies — backseat-ai xstate zod</b>
+<span class="p">$ pnpm add -D typescript@^7.0.2 @types/node@^26.4.1</span>
+<span class="cut">…</span>
+<b>updated   devDependencies — typescript @types/node
+created   tsconfig.json
+created   cli.ts
+created   my-agent.ts — the smallest machine: one move, then finished
+created   machines.ts — registers my-agent
+ok        npm run -s drive -- — fronts my-agent</b>
+
+<span class="k">Set up.</span> <b>Start a machine with `npm run -s drive -- create &lt;machine&gt;`; lint with `npm run backseat -- lint`.</b></pre>
+  </div>
+  <div class="install"><a class="btn" href="https://github.com/pottedmeat/backseat-ai">GitHub →</a></div>
+</div></section>
+
+<footer><div class="wrap">backseat-ai.dev · MIT · <a href="https://github.com/pottedmeat/backseat-ai">github.com/pottedmeat/backseat-ai</a></div></footer>
+
+<script>
+(function () {
+  var root = document.documentElement, tt = document.getElementById('tt');
+  var icons = { auto: '◐', light: '☀', dark: '☾' }, order = ['light', 'dark', 'auto'];
+  var theme = 'auto'; try { theme = localStorage.getItem('theme') || 'auto'; } catch (e) {}
+  if (order.indexOf(theme) < 0) theme = 'auto';
+  function setTheme(t) {
+    theme = t;
+    if (t === 'auto') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', t);
+    tt.textContent = icons[t];
+    try { if (t === 'auto') localStorage.removeItem('theme'); else localStorage.setItem('theme', t); } catch (e) {}
+  }
+  tt.onclick = function () { setTheme(order[(order.indexOf(theme) + 1) % order.length]); };
+  setTheme(theme);
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'), function (el) {
+    el.addEventListener('click', function () {
+      var tag = el.classList.contains('tag') ? el : el.querySelector('.tag');
+      try { navigator.clipboard.writeText('npx backseat-ai init').then(function () { tag.textContent = 'COPIED'; setTimeout(function () { tag.textContent = 'COPY'; }, 1400); }).catch(function () {}); } catch (e) {}
+    });
+  });
+})();
+</script>
+</body>
+</html>

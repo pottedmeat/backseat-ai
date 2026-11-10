@@ -1,0 +1,24 @@
+$ node cli.ts --drive send 1b36b700-73f1-4497-80fd-993bb42a624f/task-1-4 queries.submit -
+# stdin:
+{"queries":["Table Rock Lake public fishing access points Branson MO family friendly","Lake Taneycomo public fishing access Branson MO Fall Creek Rockaway Beach","Bull Shoals Lake public fishing access near Branson Missouri","Branson MO kids family fishing spots Lake Springfield public ponds"]}
+# started 2026-11-07T19:24:38Z, exit 0
+
+You are handed one query at a time as `data.current`. Run it with whatever web search you have — this workflow provides none — read the hits yourself, and report the query done, naming the query you ran; the response hands you the next one. Keep what you find: you write the finding from it at the end and nothing here stores it for you. A query that returns nothing is still a query run — report it rather than inventing a result. If reading the hits surfaces a further query, add it to the queue. Answer the sub-question thoroughly: where a hit bears on it, read the page itself rather than the snippet, and if a page refuses you, try any other way you have of fetching it before settling for the snippet. Keep note of which facts came from snippets alone. When the last query is reported you will be moved on.
+
+## Data
+
+- current: string
+Table Rock Lake public fishing access points Branson MO family friendly
+
+## To move to state: searching (Queries are being worked one at a time.)
+
+### search.results → searching (Another query is waiting.)
+
+    query: "Table Rock Lake public fishing access points Branson MO family friendly"
+
+### queries.add → searching (The hits surfaced a query worth running.)
+
+    queries: string[]   // min 1 items, each: min length 3
+
+---
+1b36b700-73f1-4497-80fd-993bb42a624f/task-1-4 · at searching · active

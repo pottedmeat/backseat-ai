@@ -1,0 +1,21 @@
+$ node cli.ts --drive snapshot 1b36b700-73f1-4497-80fd-993bb42a624f/task-1-2
+# started 2026-11-07T19:25:31Z, exit 0
+
+Conclude on `data.subQuestion`: write the finding, say that nothing supports an answer, or resume the search.
+
+## Data
+
+- question: string
+Where is the best place to take my kids fishing in Branson, MO?
+
+- subQuestion: string
+What does Table Rock Lake offer for family fishing near Branson (Table Rock State Park, Indian Point, bank fishing, fishing docks)? Cover only Table Rock Lake, not Taneycomo.
+
+Offered — each shown in full on an earlier response in this state; call describe <event> to see one whole:
+
+- finding.submit → complete
+- finding.empty → complete
+- search.resume → searching
+
+---
+1b36b700-73f1-4497-80fd-993bb42a624f/task-1-2 · at summarizing · active

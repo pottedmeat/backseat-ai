@@ -1,0 +1,48 @@
+#!/bin/bash
+# Records one deep-research drive call: exactly `node cli.ts --drive "$@"` from the demo
+# directory with BACKSEAT_STATE_DIR pinned, plus a copy of the rendered response under calls/.
+# stdout, stderr and the exit code pass through untouched. Records into RECORD_DIR, by default
+# the `1/` beside this script; a driver is handed this path in place of `node cli.ts --drive`.
+set -u
+HERE="$(cd "$(dirname "$0")" && pwd)"
+RUN_DIR="${RECORD_DIR:-$HERE/1}"
+DEMO="$(cd "$HERE/.." && pwd)"
+export BACKSEAT_STATE_DIR="$RUN_DIR/state"
+CALLS="$RUN_DIR/calls"
+mkdir -p "$BACKSEAT_STATE_DIR" "$CALLS"
+
+# Next call number, under a mkdir lock so parallel drivers never collide.
+lock="$CALLS/.lock"
+until mkdir "$lock" 2>/dev/null; do sleep 0.05; done
+n=$(( $(cat "$CALLS/.n" 2>/dev/null || echo 0) + 1 ))
+echo "$n" > "$CALLS/.n"
+rmdir "$lock"
+f="$CALLS/$(printf '%03d' "$n").txt"
+
+# A `-` argument means the payload is on stdin; read it so it can be recorded, then re-feed it.
+payload=''
+has_stdin=0
+for a in "$@"; do [ "$a" = "-" ] && has_stdin=1; done
+if [ "$has_stdin" = 1 ]; then payload="$(cat)"; fi
+
+out="$(mktemp)"; err="$(mktemp)"
+started="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+if [ "$has_stdin" = 1 ]; then
+  (cd "$DEMO" && printf '%s' "$payload" | node cli.ts --drive "$@") >"$out" 2>"$err"
+else
+  (cd "$DEMO" && node cli.ts --drive "$@" </dev/null) >"$out" 2>"$err"
+fi
+code=$?
+
+{
+  printf '$ node cli.ts --drive'; printf ' %q' "$@"; printf '\n'
+  if [ "$has_stdin" = 1 ]; then printf '# stdin:\n%s\n' "$payload"; fi
+  printf '# started %s, exit %s\n\n' "$started" "$code"
+  cat "$out"
+  if [ -s "$err" ]; then printf '\n# stderr:\n'; cat "$err"; fi
+} > "$f"
+
+cat "$out"
+cat "$err" >&2
+rm -f "$out" "$err"
+exit $code

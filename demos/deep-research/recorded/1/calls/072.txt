@@ -1,0 +1,18 @@
+$ node cli.ts --drive send 1b36b700-73f1-4497-80fd-993bb42a624f citations.submit -
+# stdin:
+{"citations":[
+{"claim":"The Missouri Department of Conservation stocks two ponds here and kids fish free.","sourceUrl":"https://www.ky3.com/content/news/Kids-fish-for-free-at-Bransons-Eiserman-Park-MDC-stocks-two-ponds-512644981.html"},
+{"claim":"Lilleys' Landing Resort and Marina lists dock fishing as free and the lake is stocked with trout.","sourceUrl":"https://visitmo.com/things-to-do/lilleys-landing-marina"},
+{"claim":"Cold, stocked trout water with several access points, including Lilleys' Landing, the Fall Creek area, Branson Landing and the MDC Rockaway Beach access.","sourceUrl":"https://mdc.mo.gov/node/250858"},
+{"claim":"Shepherd of the Hills Hatchery runs a free Kids Fishing Day in June and summer tours","sourceUrl":"https://mdc.mo.gov/newsroom/mdc-invites-young-anglers-kids-fishing-day-june-7-shepherd-hills"},
+{"claim":"Roaring River State Park (a drive away) holds free kids fishing days.","sourceUrl":"https://ksisradio.com/take-a-day-trip-for-free-kids-fishing-at-roaring-river/"},
+{"claim":"guide ratings appear on FishingBooker","sourceUrl":"https://nl.fishingbooker.com/charters/view/38853"}
+]}
+# started 2026-11-07T19:26:12Z, exit 0
+
+You are done. The report you drafted and cited is delivered to whoever handed you this tool; they read it from this actor, not from you, and nothing further is offered here. Tell them this actor is complete, give them its id, and stop.
+
+This actor is done. Nothing more can be sent.
+
+---
+1b36b700-73f1-4497-80fd-993bb42a624f · at complete · done

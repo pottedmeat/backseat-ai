@@ -1,0 +1,11 @@
+$ node cli.ts --drive describe 1b36b700-73f1-4497-80fd-993bb42a624f/task-1-1 search.results
+# started 2026-11-07T19:24:45Z, exit 0
+
+## To move to state: searching (Queries are being worked one at a time.)
+
+### search.results → searching (Another query is waiting.)
+
+    query: "Table Rock State Park Branson fishing dock free kids"
+
+---
+1b36b700-73f1-4497-80fd-993bb42a624f/task-1-1 · at searching · active

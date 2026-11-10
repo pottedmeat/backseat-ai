@@ -1,0 +1,11 @@
+$ node cli.ts --drive send 1b36b700-73f1-4497-80fd-993bb42a624f/task-1-2 finding.submit -
+# stdin:
+{"summary":"Table Rock Lake is workable but not an easy kids' lake for bank fishing. Table Rock State Park (read at source: Missouri State Parks page) has a boat ramp near the picnic shelter, fishing allowed 24 hours except in the day-use area (limited hours), bass, crappie and other warm-water species, and fishing supplies at the State Park Marina; the page does not mention fishing docks and only implies bank fishing via a photo caption. From search snippets only: a local angler forum says the area south of the dam (Dewey Short Visitor Center and the state park) has decent bank access, suggesting worms and bobbers for bluegill/bass; about 50 cedar trees were placed along the park shoreline in 13 spots to improve bank angling; bluegill is a good first catch for families. Anglers also warn that Table Rock is not really a bank lake and summer bass from shore is hard, with many prime spots boat-only. Indian Point (snippets only) is a Corps of Engineers campground about 4-5 miles from Branson with boat ramps and a swimming beach; no dedicated kids' fishing pier or on-shore fishing rules were confirmed. A Branson.com page notes some resort areas allow shore fishing but to check rules. Licenses (snippets from low-quality affiliate sites, unverified): under-16s generally fish free in Missouri, though a trout permit for youth is disputed; check MDC. No fishing-dock specifics were found.","sources":[{"url":"https://mostateparks.com/park/table-rock-state-park/fishing","title":"Fishing - Table Rock State Park"},{"url":"https://forums.ozarkanglers.com/topic/29219-help-finding-a-spot","title":"help finding a spot (Ozark Anglers forum)"},{"url":"https://www.bassresource.com/bass-fishing-forums/topic/206763-table-rock-help/","title":"table rock help (Bass Resource forum)"},{"url":"https://www.recreation.gov/camping/campgrounds/232610","title":"Indian Point (Recreation.gov)"},{"url":"https://www.branson.com/?p=593","title":"Boat Ramps & Fishing Spots in Branson MO"}]}
+# started 2026-11-07T19:25:46Z, exit 0
+
+The result is reported to the lead. Nothing further is asked of you here.
+
+This actor is done. Nothing more can be sent.
+
+---
+1b36b700-73f1-4497-80fd-993bb42a624f/task-1-2 · at complete · done

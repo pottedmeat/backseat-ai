@@ -1,0 +1,16 @@
+$ node cli.ts --drive send 1b36b700-73f1-4497-80fd-993bb42a624f task.next
+# started 2026-11-07T19:23:43Z, exit 0
+
+Dispatch while another sub-task is offered; otherwise wait until all of your subagents are complete, then move to review.
+
+Offered — each shown in full on an earlier response in this state; call describe <event> to see one whole:
+
+- task.next → researching
+
+## Subagents to start
+
+- 1b36b700-73f1-4497-80fd-993bb42a624f/task-1-4 — Which public lakes and rivers in the Branson, MO area (Table Rock Lake, Taneycomo, Bull Shoals, Lake Springfield etc.) allow family fishing, and what are the main public fishing access points? Cover only locations and access, not species or regulations.
+  `node cli.ts --drive snapshot 1b36b700-73f1-4497-80fd-993bb42a624f/task-1-4`
+
+---
+1b36b700-73f1-4497-80fd-993bb42a624f · at researching · active

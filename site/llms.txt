@@ -1,0 +1,31 @@
+# Backseat
+
+> Graph-based workflows for coding agents. A workflow is a graph: states, the transitions between them, and the instructions for each. The agent reaches a state and is told what to do there and which transitions are open; anything else is refused with a reason. Backseat never calls a model: it tells the model which steps are open and lets it choose.
+
+A workflow is an XState machine with three keys added (`instructions`, `data`, `schema`), written in TypeScript. You write the machine; an agent drives it through one command-line tool, `node cli.ts --drive`, which teaches itself as it goes. The driving agent needs no brief.
+
+## Start
+
+- `npx backseat-ai init` sets the working directory up as a project (package.json, tsconfig.json, cli.ts and a catalog) and, with no machine to find, offers a starter. It is safe to run again.
+- `npx skills add pottedmeat/backseat-ai --skill backseat-ai` installs the companion skill for writing, reviewing and debugging machines. It routes to the docs installed at `node_modules/backseat-ai/docs/`.
+
+## Commands
+
+- `npx backseat-ai …`: from anywhere, reads no project. `init`, `report`, `output <actorId>`, `doctor`.
+- `node cli.ts …`: in your project, a person's commands. `lint`, `stately`.
+- `node cli.ts --drive …`: the agent's tool. `create <machine>`, `send <actorId> <event> [payload | -]`, `snapshot <actorId>`, `describe <actorId> [<event>]`.
+
+## Docs
+
+- [Documentation index](https://github.com/pottedmeat/backseat-ai/blob/trunk/docs/README.md): the nine docs, in reading order.
+- [XState](https://github.com/pottedmeat/backseat-ai/blob/trunk/docs/xstate.md): the XState concepts a machine is written in, and what Backseat refuses or narrows.
+- [Quickstart](https://github.com/pottedmeat/backseat-ai/blob/trunk/docs/quickstart.md): setting a project up with `init`, and driving a first machine.
+- [Machines](https://github.com/pottedmeat/backseat-ai/blob/trunk/docs/machines.md): writing a machine, and the keys Backseat adds.
+- [CLI](https://github.com/pottedmeat/backseat-ai/blob/trunk/docs/cli.md): every command and flag.
+
+## Optional
+
+- [Subagents](https://github.com/pottedmeat/backseat-ai/blob/trunk/docs/subagents.md): a machine that hands work to subagents and collects what they return.
+- [Driving](https://github.com/pottedmeat/backseat-ai/blob/trunk/docs/driving.md): every response a driver sees, how a refusal reads, and the exit codes.
+- [Runs](https://github.com/pottedmeat/backseat-ai/blob/trunk/docs/runs.md): where a run lives, what each file in it holds, and the commands that read it.
+- [Repository](https://github.com/pottedmeat/backseat-ai)

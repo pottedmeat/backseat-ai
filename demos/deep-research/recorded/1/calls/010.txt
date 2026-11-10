@@ -1,0 +1,14 @@
+$ node cli.ts --drive send 1b36b700-73f1-4497-80fd-993bb42a624f task.next
+# started 2026-11-07T19:23:43Z, exit 0
+
+Dispatch while another sub-task is offered; otherwise wait until all of your subagents are complete, then move to review.
+
+No move is offered until your subagents finish their workflows.
+
+## Subagents to start
+
+- 1b36b700-73f1-4497-80fd-993bb42a624f/task-1-6 — What do reviews on TripAdvisor, Yelp and travel blogs say about the best places for kids to fish in Branson, MO? Cover only review opinions and rankings.
+  `node cli.ts --drive snapshot 1b36b700-73f1-4497-80fd-993bb42a624f/task-1-6`
+
+---
+1b36b700-73f1-4497-80fd-993bb42a624f · at researching · active

@@ -1,0 +1,22 @@
+$ node cli.ts --drive --help
+# started 2026-11-07T19:23:10Z, exit 0
+
+`node cli.ts --drive` fronts these machines:
+
+- **deep-research** — Research a question end to end: decompose it into sub-tasks, dispatch a worker per sub-task, judge whether the answer is complete, then draft and cite a report.
+
+Start one with `node cli.ts --drive create <machine>`.
+
+## Commands
+
+`node cli.ts --drive create <machine>`
+Start a fresh actor. The response is its id, its state, and the transitions enabled from there.
+
+`node cli.ts --drive send <actorId> <event.type> ['<json payload>' | -]`
+The only way to move an actor. Payload keys follow the schema shown for that event. A - in the payload's place reads the JSON from stdin instead.
+
+`node cli.ts --drive snapshot <actorId>`
+Current state and enabled transitions, unchanged. How to orient when handed an id.
+
+`node cli.ts --drive describe <actorId> [<event.type>]`
+With an event: that one move — where it leads, what it is for and its schema — and nothing else. Without one: the current state with its full first-arrival instructions, its data and its moves.

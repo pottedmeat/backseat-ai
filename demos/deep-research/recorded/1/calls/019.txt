@@ -1,0 +1,6 @@
+$ node cli.ts --drive snapshot 1b36b700-73f1-4497-80fd-993bb42a624f/task-1-N
+# started 2026-11-07T19:24:35Z, exit 1
+
+
+# stderr:
+Unknown actor '1b36b700-73f1-4497-80fd-993bb42a624f/task-1-N'
