@@ -9,7 +9,7 @@
     "url": "git+https://github.com/pottedmeat/backseat-ai.git",
     "directory": "packages/backseat-ai"
   },
-  "homepage": "https://github.com/pottedmeat/backseat-ai#readme",
+  "homepage": "https://backseat-ai.dev",
   "bugs": "https://github.com/pottedmeat/backseat-ai/issues",
   "keywords": [
     "agent",
