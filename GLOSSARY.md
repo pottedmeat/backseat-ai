@@ -1,6 +1,6 @@
 # Guarded Agent Workflow
 
-An agent is given a single tool that fronts an XState actor. The agent sees only the transitions enabled from the actor's current state and can only move on by sending a correctly shaped event. All vocabulary is XState's own; this glossary records only the meanings this project adds. Carried over from xstate-api, which proved the approach; the terms under **Authoring** are Backseat's own.
+An agent is given a single tool that fronts an XState actor. The agent sees only the transitions enabled from the actor's current state and can only move on by sending a correctly shaped event. All vocabulary is XState's own; this glossary records only the meanings this project adds.
 
 "Workflow" is the outward word, for what people and agents read: the site, the package description, a machine's own instructions and the tool's messages. In technical prose the unit an agent drives is a **machine**, and what is authored is that machine's **definition**: one TypeScript value.
 
