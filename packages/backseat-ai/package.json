@@ -1,6 +1,6 @@
 {
   "name": "backseat-ai",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Guarded agent workflows: an XState machine an agent drives one enabled move at a time, and a CLI that fronts it.",
   "license": "MIT",
   "type": "module",
