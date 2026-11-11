@@ -310,7 +310,7 @@ details.ex[open] { padding-bottom: 28px; }
     <p class="kicker">I've seen how you drive without me</p>
     <h2>A workflow that is <em>enforced</em>, not described.</h2>
     <p class="lead">Backseat came from wanting more from workflows that ran on instructions alone. Each was a long prompt describing the steps, and even a frontier model treated it as a description: mostly followed, never enforced. The want was a workflow that holds its shape whichever model is in it.</p>
-    <p class="body">So the shape is written down and enforced. You decide what can happen: the states, the transitions out of each, the guard on each one (a condition that has to hold before it is offered), the schema it must be sent with. The model decides what does. The workflow is semi-deterministic: every step is fixed, and the rest is the model's judgment, what it does inside the step it is in and, where more than one transition is open, which one it takes.</p>
+    <p class="body">So the shape is written down and enforced. You decide what can happen: the states, the transitions out of each, the guard on each one (a condition that has to hold before it is offered), the schema it must be sent with. The model decides what does. The workflow is semi-deterministic: the steps and the routes between them are fixed, and the model's judgment fills the rest, what it does inside a step and, where more than one transition is open, which one it takes.</p>
     <p class="body">It is LangGraph with the roles reversed. A framework like LangGraph drives inference calls: your code calls the model at each node and reassembles the messages and context for the next. Backseat drives a conversation: the agent you are already talking to runs one command, reads what the workflow says, does the work with its own tools, and asks again.</p>
     <p class="body">What is enforced is the path. The workflow cannot stop an agent from walking away, and it does not see how the work was done. It never advances on anything but a transition it offered, sent with a payload that passed.</p>
     <p class="body">A model handed one step at a time, with its instructions and its schema, and refused with a reason when it strays, runs a workflow it could not have run from the prompt. It does not have to be a frontier model. Because each response carries only one state's instructions and data, a smaller model has a short, specific prompt at every step instead of one long one to keep in mind.</p>
@@ -704,7 +704,7 @@ Offered — each shown in full on an earlier response in this state; call descri
 <section class="sec" id="subagents"><div class="wrap">
   <div class="sechead">
     <p class="kicker">here's who to call and what to tell them</p>
-    <h2>The workflow writes the list; the agent makes the <em>calls</em>.</h2>
+    <h2>The workflow lists the subagents; the agent <em>starts</em> them.</h2>
     <p class="lead">A subagent that needs a workflow of its own gets one, with a ledger of its own. The agent makes the call. It starts the subagent and tells it to run the listed command, which hands the subagent a workflow of its own, and that is the whole handoff, because once in the seat the subagent has a backseat driver of its own, with its own instructions, its own refusals and its own ledger, told only its <code>input</code>. While the subagents work, the agent carries on through the workflow. The first transition that needs what they produce is not offered until all of them have finished; sent anyway, it is refused, naming the subagents still out. Sent once they are back, it brings their work into the parent's ledger at the workflow's discretion. Only what the calling agent needs is surfaced to it.</p>
   </div>
   <div class="pair">
@@ -887,6 +887,29 @@ Report which run? [1-1] <span class="k">1</span>
         </div>
       </div>
     </figure></div>
+    <details class="ex"><summary><span><b>the agent sees</b> the answer this run produced: the lead's draft, read back from the ledger to be cited</span></summary>
+    <figure class="capture">
+      <div class="sign">
+        <div class="io sent"><span class="tag">the agent sends</span><pre class="cmdline"><span class="cmd">$ node cli.ts --drive send 1b36b700… draft.submit -</span></pre></div>
+        <div class="io recv"><span class="tag">the agent receives</span><pre><span class="cut">…</span>
+
+<span class="h">## Data</span>
+
+- draft: string
+Where to take your kids fishing in Branson, MO
+
+Short answer: for young or first-time anglers, start with the MDC-stocked ponds at Eiserman Park in Branson, where kids can fish free. For a classic Branson outing on real water, go to Lake Taneycomo, where Lilleys' Landing Resort and Marina lists dock fishing as free and the lake is stocked with trout.
+
+Top picks
+1. Eiserman Park ponds (Branson). The Missouri Department of Conservation stocks two ponds here and kids fish free. Small, easy water suits young children.
+2. Lake Taneycomo. Cold, stocked trout water with several access points, including Lilleys' Landing, the Fall Creek area, Branson Landing and the MDC Rockaway Beach access. Check dam water-release schedules and have children wear life jackets, as the current can change quickly.
+
+<span class="cut">…</span>
+
+<span class="foot">---
+1b36b700… · at citing.awaiting · active</span></pre></div>
+      </div>
+    </figure></details>
   </div>
 </div></section>
 
@@ -909,7 +932,7 @@ Report which run? [1-1] <span class="k">1</span>
 <section class="sec tint" id="start"><div class="wrap">
   <div class="sechead">
     <p class="kicker">scoot over. I'm getting in the back</p>
-    <h2>One command, and the back seat is <em>taken</em>.</h2>
+    <h2>One prompt, and the back seat is <em>taken</em>.</h2>
     <p class="lead">Paste one of <a href="#prompts">the prompts at the top</a> into your coding agent and you run nothing yourself: it installs the companion skill, runs <code>init</code>, and writes the workflow with you. To run the workflow, tell your agent to run <code>node cli.ts --drive create &lt;machine&gt;</code> and to follow what it prints. By hand, the one command is <code>init</code>: it sets the directory up as a project and, with no machine to find in your source, offers a starter: one state, one transition, then finished. Run it again any time; it finishes what is missing and leaves the rest alone. Every command is in the <a href="https://github.com/pottedmeat/backseat-ai/blob/trunk/docs/cli.md">CLI reference</a>.</p>
   </div>
   <div class="asphalt card term">
