@@ -41,6 +41,10 @@ _Avoid_: No-op transition, empty transition, pass-through, stub
 The value a state node declares it computes from context, for the runtime to return while the agent is in that state. One of the two declared ways a value in context reaches an agent — the other is a spawn's **about** — and everything else in context stays hidden. How a value one driver stated reaches another driver. On the one response to a send it is also handed that send's event, with the **effect output** on it, so what a call returned is shown once and never kept.
 _Avoid_: Revealed context, exposed context, public context, projection
 
+**Ledger**:
+The outward word for an actor's context: what the machine has written down over a run, kept as written and read back exactly. It stands against a driver's own context, which is its conversation. Where "workflow" is the word, "context" is left to mean the conversation and the machine's is the ledger; technical prose keeps XState's "context".
+_Avoid_: Record (a run is one), memory, store
+
 **Driver**:
 The agent driving a given actor. A lead and its workers may have different drivers, each with its own context. The tool is the only medium they share: even a finding nothing can verify reaches another driver through a file the machine writes from the payload it validated, never by relay between drivers.
 _Avoid_: Caller, operator, user
