@@ -1,13 +1,16 @@
 # Backseat
 
-> Graph-based workflows for coding agents. A workflow is a graph: states, the transitions between them, and the instructions for each. The agent reaches a state and is told what to do there and which transitions are open; anything else is refused with a reason. Backseat never calls a model: it tells the model which steps are open and lets it choose.
+> Graph-based workflows for coding agents: structure and direction for a coding agent, enforced. A workflow is a graph: states, the transitions between them, and the instructions for each. The agent a person already uses drives it from its own shell: it reaches a state and is told what to do there and which transitions are open, and anything else is refused with a reason. A long prompt describes the steps; this holds the agent to them.
 
-A workflow is an XState machine with three keys added (`instructions`, `data`, `schema`), written in TypeScript. You write the machine; an agent drives it through one command-line tool, `node cli.ts --drive`, which teaches itself as it goes. The driving agent needs no brief.
+A workflow is an XState machine with three keys added (`instructions`, `data`, `schema`), written in TypeScript. A person, or their coding agent, writes the machine; an agent drives it through one command-line tool, `node cli.ts --drive`, which teaches itself as it goes. The driving agent needs no brief.
+
+Where a framework like LangGraph drives inference calls, Backseat drives a conversation: the agent runs one command, reads what the workflow says, does the work with its own tools, and asks again. What the workflow knows is kept in its ledger (`context` in the code), and a state's `data` is the part of it the agent is shown. What is enforced is the path: the workflow cannot stop an agent from walking away, and it never advances on anything but a transition it offered, sent with a payload that passed.
 
 ## Start
 
+- `npx skills add pottedmeat/backseat-ai --skill backseat-ai` installs the companion skill for writing, reviewing and debugging machines. It routes to the docs installed at `node_modules/backseat-ai/docs/`. With it installed, a coding agent can be asked to build a new workflow, or to turn a workflow written in prose into a machine; it should interview the person first about the steps, what has to be true before moving from each to the next, and what a finished run produces.
 - `npx backseat-ai init` sets the working directory up as a project (package.json, tsconfig.json, cli.ts and a catalog) and, with no machine to find, offers a starter. It is safe to run again.
-- `npx skills add pottedmeat/backseat-ai --skill backseat-ai` installs the companion skill for writing, reviewing and debugging machines. It routes to the docs installed at `node_modules/backseat-ai/docs/`.
+- To run a workflow, the agent runs `node cli.ts --drive create <machine>` and follows what it prints.
 
 ## Commands
 

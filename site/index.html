@@ -794,7 +794,7 @@ Are there stocked ponds, trout parks or hatchery attractions near Branson (Sheph
     <p class="lead">Every call an agent makes lands in the trace: the state the actor was in, the transition it took or was refused and the reason, and what an effect brought back. The trace report draws each actor's journey from it, the states it stopped in and the calls answered from each. A run is assessed from the workflow's trace, never from the agent's account. That is how a workflow improves: a wrong turn sits under one state, so the instructions to fix are that state's. Fix them, run again, and the next report says whether it worked.</p>
   </div>
   <div class="pair">
-    <div><p class="eyebrow"><b>you see</b> · the trace report for run 1, the lead's journey, the refused call selected</p>
+    <div><p class="eyebrow"><b>you see</b> · the trace report for run 1, the lead's journey, with a refused call selected: task.next, sent when it was no longer offered</p>
     <div class="asphalt card term">
       <div class="strip"><span class="pre"><span class="d">$</span> npx backseat-ai report</span></div>
 <pre><span class="p">#  machine        root      status  started           last call         calls  undeclared  where</span>
@@ -866,7 +866,7 @@ Report which run? [1-1] <span class="k">1</span>
           </div>
           <div class="stop">
             <h3>complete<small>after citations.submit · done</small></h3>
-            <p class="steps"><code>citations.submit</code> → citing.checking then <code>always</code><span class="if">if</span><code>citationsHold</code> → citing.accepted then <code>xstate.done.state.deepResearch.citing</code> → complete</p>
+            <p class="steps"><code>citations.submit</code> → citing.checking then … → complete</p>
           </div>
         </div>
         <div class="detail">
