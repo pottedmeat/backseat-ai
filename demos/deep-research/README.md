@@ -20,6 +20,10 @@ node cli.ts --drive send <actorId> brief.submit - <<'JSON'
 JSON
 ```
 
+Two of the lead's effects call TypeSafe ([`judgments.ts`](./judgments.ts)): how many rounds a question warrants, and
+which proposed sub-tasks run. Set `TYPESAFE_API_KEY`, in the environment or in a `.env` in this directory, before
+driving it.
+
 The catalog names only the lead: `researchTask` is reached through the lead's roster, and a subagent drives each
 worker with the same tool as `<root>/<key>`, from this directory too.
 

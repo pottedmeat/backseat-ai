@@ -1,10 +1,11 @@
 # Backseat documentation
 
 Backseat runs an agent's workflow as an [XState](https://stately.ai/docs/xstate) machine that the agent drives. The
-agent holds one command-line tool fronting a running actor. From wherever the actor is, the tool shows only the moves
-open from there, what each is for, and what it must send to take one, and it refuses a send that doesn't meet that.
-Backseat never calls a model. The agent does the work with its own tools, and the machine decides which routes are
-open.
+agent holds one command-line tool fronting a running actor. From wherever the actor is, the tool shows only the
+transitions open from there, what each is for, and what it must send to take one, and it refuses a send that doesn't
+meet that.
+Where a framework like LangGraph drives inference calls, Backseat drives a conversation: the agent does the work with
+its own tools, and the machine decides which routes are open.
 
 Read them in this order:
 

@@ -34,7 +34,7 @@
   --asphalt: #1b1d1f; --asphalt-fg: #e4e6e0; --asphalt-dim: #8b9088; --asphalt-hi: #ffffff; --asphalt-rule: #3a3e3b;
   --shadow: 0 16px 32px -8px rgba(16,20,16,.28);
   --f-head: "Overpass", "Highway Gothic", "Arial Narrow", sans-serif; --f-body: "Overpass", system-ui, sans-serif; --f-mono: "Overpass Mono", ui-monospace, Menlo, monospace;
-  --wrap: 1200px; --radius: 14px; --h1: clamp(44px, 7.4vw, 80px); --h2: clamp(32px, 4.4vw, 44px);
+  --wrap: 1200px; --radius: 14px; --h1: clamp(40px, 6.2vw, 64px); --h2: clamp(32px, 4.4vw, 44px);
   --nav-bg: #116b3f; --nav-fg: #ffffff;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
@@ -131,7 +131,6 @@ h1 em, h2 em { font-style: italic; color: #101410; background: var(--yellow); pa
 
 /* the asphalt card: what a person types, in the terminal's own colours, never a sign */
 .asphalt { background: var(--asphalt); color: var(--asphalt-fg); border-radius: var(--radius); padding: 22px 28px 26px; font-family: var(--f-mono); font-size: 13.5px; line-height: 1.85; min-width: 0; box-shadow: var(--shadow); max-width: 860px; }
-.cards { display: grid; gap: 18px; min-width: 0; max-width: 860px; }
 .card { padding-top: 0; }
 .strip { display: flex; justify-content: space-between; gap: 12px; align-items: center; flex-wrap: wrap; margin: 0 -28px 10px; padding: 12px 28px 10px; background: rgba(255,255,255,.07); border-radius: var(--radius) var(--radius) 0 0; }
 .strip .pre { color: var(--asphalt-hi); font-weight: 700; }
@@ -208,6 +207,34 @@ footer { border-top: 1px solid var(--line); padding-block: 32px 56px; font-famil
 footer code { font-family: inherit; color: var(--ink); }
 footer a { color: var(--ink); text-decoration: none; }
 footer a:hover { text-decoration: underline; }
+/* the start: two prompts to paste into a coding agent, one tab each */
+.start { max-width: 540px; margin-bottom: 20px; }
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.tabs button { font-family: var(--f-mono); font-size: 13px; padding: 8px 14px; border: 1px solid var(--line); border-radius: 8px; background: transparent; color: var(--fg2); cursor: pointer; }
+.tabs button[aria-selected="true"] { background: var(--asphalt); border-color: var(--asphalt); color: var(--asphalt-hi); }
+.prompt { position: relative; background: var(--asphalt); color: var(--asphalt-fg); border-radius: var(--radius); padding: 16px 20px 20px; font-family: var(--f-mono); font-size: 13px; line-height: 1.7; box-shadow: var(--shadow); }
+.prompt p { margin: 0; overflow-wrap: anywhere; }
+.prompt .sub { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--asphalt-dim); margin-bottom: 10px; padding-right: 72px; }
+.prompt .tag { position: absolute; top: 12px; right: 14px; font-family: var(--f-mono); font-size: 11px; letter-spacing: .04em; padding: 4px 8px; border-radius: 6px; background: rgba(255,255,255,.14); color: var(--asphalt-fg); border: 0; cursor: pointer; }
+.prompt i { font-style: normal; color: var(--asphalt-hi); border-bottom: 1px dashed var(--asphalt-dim); }
+.intro + .intro { margin-top: 10px; }
+/* an exhibit folded under one line that says what it shows */
+details.ex { border-top: 1px solid var(--line); min-width: 0; }
+details.ex:last-child { border-bottom: 1px solid var(--line); }
+.pair details.ex + details.ex { margin-top: -28px; }
+details.ex summary { cursor: pointer; list-style: none; display: flex; gap: 12px; align-items: baseline; padding: 14px 0; font-size: 15px; line-height: 1.5; color: var(--fg2); max-width: 860px; }
+details.ex summary::-webkit-details-marker { display: none; }
+details.ex summary::before { content: "+"; flex: none; width: 1ch; font-family: var(--f-mono); font-weight: 700; color: var(--green); }
+details.ex[open] summary::before { content: "−"; }
+details.ex summary:hover { color: var(--ink); }
+details.ex summary b { margin-right: 8px; font-family: var(--f-mono); font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink); }
+details.ex[open] { padding-bottom: 28px; }
+
+/* the index: where on the page each question is answered */
+.index { border-top: 1px solid var(--line); padding-block: 16px; font-family: var(--f-mono); font-size: 13px; color: var(--fg3); }
+.index .wrap { display: flex; flex-wrap: wrap; gap: 6px 22px; }
+.index a { text-decoration: none; color: var(--fg2); }
+.index a:hover { color: var(--green); }
 </style>
 </head>
 <body>
@@ -219,80 +246,152 @@ footer a:hover { text-decoration: underline; }
 
 <section class="hero"><div class="wrap">
   <div class="hero-copy">
-    <p class="kicker">unsolicited guidance, every mile</p>
-    <h1>A workflow in the back seat, <em>nagging</em> your agent through every step.</h1>
+    <p class="kicker">a workflow in the back seat, nagging your agent through every step</p>
+    <h1>Structure and direction for your coding agent, <em>enforced</em>.</h1>
     <p class="dek">Graph-based workflows for coding agents.</p>
-    <p class="lead">A workflow is a graph: states, the transitions between them, and the instructions for each. The agent reaches a state and is told what to do there and which transitions are open; anything else is refused with a reason. Most frameworks call the model and decide its next step; Backseat tells the model which steps are open and lets it choose.</p>
-    <div class="install"><button class="pill" type="button" data-copy><span class="d">$</span> npx backseat-ai init <span class="tag">COPY</span></button><a class="btn" href="https://github.com/pottedmeat/backseat-ai">GitHub →</a></div>
-    <p class="intro">The green signs on this page are snippets of one real workflow: a research lead that cuts a question into sub-tasks, sends a worker after each, and writes up what comes back.</p>
+    <p class="lead">A workflow is a graph: states, the transitions between them, and the instructions for each. The agent you already use drives it from its own shell: it reaches a state and is told what to do there and which transitions are open, and anything else is refused with a reason. A long prompt describes the steps; this holds the agent to them.</p>
+    <div class="start" id="prompts">
+      <div class="tabs" role="tablist" aria-label="Start with"><button type="button" role="tab" id="tab-new" aria-controls="panel-new" aria-selected="true">new workflow</button><button type="button" role="tab" id="tab-existing" aria-controls="panel-existing" aria-selected="false">existing workflow</button></div>
+      <div class="prompt" role="tabpanel" id="panel-new" aria-labelledby="tab-new">
+        <p class="sub">paste into your coding agent</p><button class="tag" type="button" data-copy="prompt-new">COPY</button>
+        <p id="prompt-new">Install the backseat-ai skill: `npx skills add pottedmeat/backseat-ai --skill backseat-ai`. Then help me build a Backseat workflow for: <i>[what you want done]</i>. Interview me before you write anything: what the steps are, what has to be true before moving from each step to the next, and what a finished run produces. Then write the workflow, lint it, and walk me through one run.</p>
+      </div>
+      <div class="prompt" role="tabpanel" id="panel-existing" aria-labelledby="tab-existing" hidden>
+        <p class="sub">paste into your coding agent</p><button class="tag" type="button" data-copy="prompt-existing">COPY</button>
+        <p id="prompt-existing">Install the backseat-ai skill: `npx skills add pottedmeat/backseat-ai --skill backseat-ai`. Then turn the workflow in <i>[file, or paste it]</i> into a Backseat workflow. First list the states and transitions you read in it, and ask me about anything it leaves open: which steps can repeat, what has to be checked before moving on, what counts as done. Don't add rules it doesn't state. Then write the workflow, lint it, and walk me through one run.</p>
+      </div>
+    </div>
+    <div class="install"><a class="btn" href="https://github.com/pottedmeat/backseat-ai">GitHub →</a></div>
+    <p class="intro">A workflow (a machine, in the code) is a TypeScript file in your project, driven through a small CLI (<code>cli.ts</code>, written into the project for you) from Claude Code, pi, opencode or whichever coding agent you use. The agent's commands are the ones under <code>--drive</code>. Nothing runs between calls.</p>
+    <p class="intro">The green signs on this page are snippets of one real workflow. A coding agent drives it, though the work is research: a lead agent that cuts a question into sub-tasks, sends a subagent, a worker, after each, and writes up what comes back.</p>
   </div>
   <figure class="capture">
     <div class="sign">
-      <div class="io sent"><span class="tag">the agent sends</span><pre class="cmdline"><span class="cmd">$ node cli.ts --drive send 1b36b700…/task-1-3 queries.submit -</span></pre><pre class="payload">{
-  "queries": [
-    "Shepherd of the Hills Fish Hatchery Branson kids fishing",
-    "Table Rock Lake trout fishing Lake Taneycomo kids family",
-    "Roaring River State Park trout fishing kids Cassville Missouri",
-    "Bass Pro Shops Springfield Missouri kids fishing pond Lake Springfield"
-  ]
+      <div class="io sent"><span class="tag">the agent sends</span><pre class="cmdline"><span class="cmd">$ node cli.ts --drive send 1b36b700…/task-1-3 search.results -</span></pre><pre class="payload">{
+  "query": "Bass Pro Shops Springfield Missouri kids fishing pond Lake Springfield"
 }</pre></div>
-      <div class="io recv"><span class="tag">the agent receives</span><pre>You are handed one query at a time as `data.current`. Run it with whatever web search you have — this workflow provides none — read the hits yourself, and report the query done, naming the query you ran; the response hands you the next one. Keep what you find: you write the finding from it at the end and nothing here stores it for you. A query that returns nothing is still a query run — report it rather than inventing a result. If reading the hits surfaces a further query, add it to the queue. Answer the sub-question thoroughly: where a hit bears on it, read the page itself rather than the snippet, and if a page refuses you, try any other way you have of fetching it before settling for the snippet. Keep note of which facts came from snippets alone. When the last query is reported you will be moved on.
+      <div class="io recv"><span class="tag">the agent receives</span><pre>Write a finding that answers `data.subQuestion` from the hits you gathered, listing only the sources you actually drew on.
 
-<span class="h">## Data</span>
+<span class="cut">…</span>
 
-- current: string
-Shepherd of the Hills Fish Hatchery Branson kids fishing
+<span class="h">## To move to state: complete (The sub-task is finished, with a finding or a stated absence.)</span>
+
+<span class="h">### finding.submit → complete (The sub-question is answered.)</span>
+
+<span class="sch">    summary: string   // min length 80</span>
+<span class="sch">    sources: {</span>
+<span class="sch">      url: string     // uri</span>
+<span class="sch">      title: string   // min length 1</span>
+<span class="sch">    }[]               // min 1 items</span>
+
+<span class="h">### finding.empty → complete (Nothing found supports an answer.)</span>
+
+<span class="sch">    reason: string   // min length 80</span>
 
 <span class="h">## To move to state: searching (Queries are being worked one at a time.)</span>
 
-<span class="h">### search.results → searching (Another query is waiting.)</span>
-
-<span class="sch">    query: "Shepherd of the Hills Fish Hatchery Branson kids fishing"</span>
-
-<span class="h">### queries.add → searching (The hits surfaced a query worth running.)</span>
+<span class="h">### search.resume → searching (The hits do not yet answer it.)</span>
 
 <span class="sch">    queries: string[]   // min 1 items, each: min length 3</span>
 
 <span class="foot">---
-1b36b700…/task-1-3 · at searching · active</span></pre></div>
+1b36b700…/task-1-3 · at summarizing · active</span></pre></div>
     </div>
+    <figcaption class="intro">A worker reports its last search. The workflow answers with what to do next and the three transitions open from there: under each, the event to send for it and its schema, the shape of the JSON that event has to carry.</figcaption>
   </figure>
 </div></section>
 
-<section class="sec tint"><div class="wrap">
+<div class="index" role="navigation" aria-label="On this page"><div class="wrap">
+  <a href="#enforced">why it exists</a><a href="#nothing-first">what the agent is told</a><a href="#instructions">how it works</a><a href="#subagents">subagents</a><a href="#trace">what you get back</a><a href="#start">getting started</a>
+</div></div>
+
+<section class="sec tint" id="enforced"><div class="wrap">
+  <div class="sechead prose">
+    <p class="kicker">I've seen how you drive without me</p>
+    <h2>A workflow that is <em>enforced</em>, not described.</h2>
+    <p class="lead">Backseat came from wanting more from workflows that ran on instructions alone. Each was a long prompt describing the steps, and even a frontier model treated it as a description: mostly followed, never enforced. The want was a workflow that holds its shape whichever model is in it.</p>
+    <p class="body">So the shape is written down and enforced. You decide what can happen: the states, the transitions out of each, the guard on each one (a condition that has to hold before it is offered), the schema it must be sent with. The model decides what does. The workflow is semi-deterministic: the steps and the routes between them are fixed, and the model's judgment fills the rest, what it does inside a step and, where more than one transition is open, which one it takes.</p>
+    <p class="body">It is LangGraph with the roles reversed. A framework like LangGraph drives inference calls: your code calls the model at each node and reassembles the messages and context for the next. Backseat drives a conversation: the agent you are already talking to runs one command, reads what the workflow says, does the work with its own tools, and asks again.</p>
+    <p class="body">What is enforced is the path. The workflow cannot stop an agent from walking away, and it does not see how the work was done. It never advances on anything but a transition it offered, sent with a payload that passed.</p>
+    <p class="body">A model handed one step at a time, with its instructions and its schema, and refused with a reason when it strays, runs a workflow it could not have run from the prompt. It does not have to be a frontier model. Because each response carries only one state's instructions and data, a smaller model has a short, specific prompt at every step instead of one long one to keep in mind.</p>
+  </div>
+</div></section>
+
+<section class="sec" id="nothing-first"><div class="wrap">
   <div class="sechead">
-    <p class="kicker">don't worry, I wrote it down</p>
-    <h2>Everything the agent is told is <em>read off</em> the notes, never the notes themselves.</h2>
-    <p class="lead">Everything the workflow knows lives in one context: the question, the round it is on, the sub-tasks still queued, the findings so far. A transition writes to it; a state reads from it. Instructions, schema and data are written as functions of context and computed each time the agent reaches a state, and the agent is handed exactly what that state declares. Nothing else in context reaches it.</p>
+    <p class="kicker">I'll tell you everything, once we're on the road</p>
+    <h2>The agent reads nothing before it starts and, even then, only what it <em>needs</em>.</h2>
+    <p class="lead">Most agents start under a wall of instructions: every rule, every step, every case, read before anything has happened and carried through everything after. Here there is nothing to read first. The agent starts the workflow as an actor, a running instance with an id of its own, and from then on it is told what it needs when it needs it: what to do in the state it is in, which transitions are open from there, and nothing about the rest of the workflow until it gets there.</p>
   </div>
   <div class="pair">
-    <div><p class="eyebrow"><b>you write</b> · deep-research.ts, trimmed to one write and one read</p>
-    <figure class="source"><pre><span class="k">context</span>: () =&gt; ({ question: <span class="s">''</span>, round: <span class="n">0</span>, maxRounds: <span class="n">3</span> }),
+    <div><p class="eyebrow"><b>the agent sees</b> · the first call of the run: one instruction, one transition and its schema</p>
+    <figure class="capture">
+      <div class="sign">
+        <div class="io sent"><span class="tag">the agent sends</span><pre class="cmdline"><span class="cmd">$ node cli.ts --drive create deep-research</span></pre></div>
+        <div class="io recv"><span class="tag">the agent receives</span><pre><span class="cut">…</span>
+
+State the research question verbatim as you were given it.
+
+<span class="h">## To move to state: planning (The question is known; this round needs sub-tasks.)</span>
+
+<span class="h">### brief.submit → planning (The question is stated.)</span>
+
+<span class="sch">    question: string   // min length 10</span>
+
+<span class="cut">…</span>
+
+<span class="foot">---
+1b36b700… · at briefing · active</span></pre></div>
+      </div>
+    </figure></div>
+  </div>
+</div></section>
+
+<section class="sec tint" id="ledger"><div class="wrap">
+  <div class="sechead">
+    <p class="kicker">don't worry, I wrote it down</p>
+    <h2>The workflow keeps the <em>ledger</em>; the agent is read the part it needs, where it needs it.</h2>
+    <p class="lead">Everything the workflow knows lives in one ledger (<code>context</code> in the code): the question, the round it is on, the sub-tasks still queued, the findings so far, each kept as it was written for as long as the run lasts. A transition writes to it; a state reads from it. A state declares <code>data</code>: the part of the ledger the agent is handed while it is there, computed each time it arrives. A line written on the third call reads the same on the sixty-ninth, sixty-six calls and six workers later, so the agent is shown the ledger, not its recollection of it. What a state does not declare stays hidden.</p>
+  </div>
+  <div class="pair">
+    <details class="ex"><summary><span><b>the workflow</b> one transition writing to the ledger, and two states declaring what the agent may read from it</span></summary>
+    <figure class="source"><pre><span class="k">context</span>: () =&gt; ({ question: <span class="s">''</span>, round: <span class="n">0</span>, … }),
 
 planning: {
   on: {
     <span class="s">'plan.submit'</span>: {
-      <span class="c">// Writes to context.</span>
+      <span class="c">// Writes to the ledger.</span>
       actions: assign(({ context }) =&gt; ({ round: context.round + <span class="n">1</span>, … })),
     },
   },
-  <span class="c">// Reads context for the agent: only these values reach it.</span>
+  <span class="c">// Reads the ledger for the agent: only these values reach it. The round shown is the one being planned.</span>
   <span class="k">data</span>: ({ context, event }) =&gt; ({
     round: context.round + <span class="n">1</span>,
     maxRounds: context.maxRounds,
     …
   }),
-},</pre></figure></div>
-    <div><p class="eyebrow"><b>the context</b> · internal, never shown; as the agent reaches planning</p>
+},
+
+…
+
+reviewing: {
+  <span class="c">// Sixty-six calls and six workers later: the ledger as written, down to what the workers reported.</span>
+  <span class="k">data</span>: ({ context: { question, round, maxRounds, findings, unanswerable, failed } }) =&gt;
+    ({ question, round, maxRounds, findings: withFiles(findings), unanswerable, failed }),
+  …
+},</pre></figure></details>
+    <details class="ex" open><summary><span><b>the ledger</b> what the ledger holds as the agent reaches planning: three values, kept out of sight</span></summary>
     <figure class="source"><pre>{
   "question": <span class="s">"Where is the best place to take my kids fishing in Branson, MO?"</span>,
   "round": <span class="n">0</span>,
   "maxRounds": <span class="n">4</span>
-}</pre></figure></div>
-    <div><p class="eyebrow"><b>the agent sees</b> · the arrival at planning, handed only what its data declares</p>
+}</pre></figure></details>
+    <details class="ex" open><summary><span><b>the agent sees</b> arriving at planning with the round and the budget of rounds, and nothing else: the question stays in the ledger</span></summary>
     <figure class="capture">
       <div class="sign">
-        <div class="io sent"><span class="tag">the agent sends</span><pre class="cmdline"><span class="cmd">$ node cli.ts --drive send 1b36b700… brief.submit -</span></pre></div>
+        <div class="io sent"><span class="tag">the agent sends</span><pre class="cmdline"><span class="cmd">$ node cli.ts --drive send 1b36b700… brief.submit -</span></pre><pre class="payload">{
+  "question": "Where is the best place to take my kids fishing in Branson, MO?"
+}</pre></div>
         <div class="io recv"><span class="tag">the agent receives</span><pre>You are planning round `data.round` of at most `data.maxRounds`. Start broad: a first round maps the ground — which candidates, sources and angles exist — rather than trying to settle the answer, and later rounds add depth aimed at what it turns up.
 
 <span class="cut">…</span>
@@ -307,29 +406,59 @@ planning: {
 
 <span class="cut">…</span>
 
-<span class="h">## To move to state: researching (Workers are being dispatched and are running.)</span>
-
-<span class="h">### plan.submit → researching (The round has its sub-tasks.)</span>
-
-<span class="sch">    subTasks: {</span>
-<span class="sch">      subQuestion: string   // min length 10</span>
-<span class="sch">    }[]                     // min 10 items, max 40 items</span>
-
 <span class="foot">---
 1b36b700… · at planning · active</span></pre></div>
       </div>
-    </figure></div>
+    </figure></details>
+    <details class="ex"><summary><span><b>the agent sees, sixty-six calls later</b> arriving at reviewing with the question read back exactly as it was written, and what six workers reported</span></summary>
+    <figure class="capture">
+      <div class="sign">
+        <div class="io sent"><span class="tag">the agent sends</span><pre class="cmdline"><span class="cmd">$ node cli.ts --drive send 1b36b700… research.review</span></pre></div>
+        <div class="io recv"><span class="tag">the agent receives</span><pre><span class="cut">…</span>
+
+<span class="h">## Data</span>
+
+- question: string
+Where is the best place to take my kids fishing in Branson, MO?
+
+- round: number
+1
+
+- maxRounds: number
+4
+
+- findings: array
+```json
+[
+  {
+    "actorId": "1b36b700…/task-1-1",
+    "subQuestion": "Which Branson-area fishing spots are free or low-cost, with fishing docks, piers or bank access suitable for young children (e.g., Table Rock State Park dock, Moonshine Beach, Branson Landing)? Cover only access, safety and cost, not guided trips.",
+    "sources": [
+      <span class="cut">…</span>
+    ],
+    "file": "…/task-1-1.md"
+  },
+  <span class="cut">…</span>
+]
+```
+
+<span class="cut">…</span>
+
+<span class="foot">---
+1b36b700… · at reviewing · active</span></pre></div>
+      </div>
+    </figure></details>
   </div>
 </div></section>
 
-<section class="sec"><div class="wrap">
+<section class="sec" id="instructions"><div class="wrap">
   <div class="sechead">
     <p class="kicker">I'll tell you what to do when we get there</p>
     <h2>Instructions arrive <em>with</em> the state, not before it.</h2>
-    <p class="lead">Every state and every transition carries a one-line description: a clarification of what it is, read while the agent is choosing. There are no instructions in it. Instructions are what a state hands the agent by being reached, computed from context and from whether this is a first visit or a return. So the agent commits to a transition before it reads a word of what it will be asked to do there.</p>
+    <p class="lead">Every state and every transition carries a one-line description: a clarification of what it is, read while the agent is choosing. There are no instructions in it. Instructions are what a state hands the agent by being reached. So the agent commits to a transition before it reads a word of what it will be asked to do there, and the instructions for the roads not taken never enter its context. A state's instructions are also told which visit this is. The first visit explains the whole job; every return, with that explanation still in the agent's context, gets one line that points back to it.</p>
   </div>
   <div class="pair">
-    <div><p class="eyebrow"><b>you write</b> · research-task.ts, trimmed to the descriptions and the instructions</p>
+    <details class="ex"><summary><span><b>the workflow</b> a one-line description on a transition and on a state, and instructions that differ between the first visit and a return</span></summary>
     <figure class="source"><pre>searching: {
   on: {
     <span class="s">'search.results'</span>: {
@@ -344,16 +473,18 @@ planning: {
 summarizing: {
   <span class="c">// A clarification of the state, read while choosing. No instructions here.</span>
   <span class="k">description</span>: <span class="s">'Every query has been answered; the sub-task needs a written finding.'</span>,
-  <span class="c">// Handed to the agent on arrival, told the context and which visit this is.</span>
+  <span class="c">// Handed to the agent on arrival. The function is given the ledger and which visit this is.</span>
   <span class="k">instructions</span>: ({ visit }) =&gt;
     visit === <span class="s">'first'</span>
       ? <span class="s">'Write a finding that answers `data.subQuestion` from the hits you gathered, …'</span>
       : <span class="s">'Conclude on `data.subQuestion`: write the finding, say that nothing supports an answer, or resume the search.'</span>,
-},</pre></figure></div>
-    <div><p class="eyebrow"><b>the agent sees, while choosing</b> · the worker's last query reported, with summarizing offered in two lines</p>
+},</pre></figure></details>
+    <details class="ex"><summary><span><b>the agent sees, while choosing</b> the next state offered in two lines of description, with no instructions in them</span></summary>
     <figure class="capture">
       <div class="sign">
-        <div class="io sent"><span class="tag">the agent sends</span><pre class="cmdline"><span class="cmd">$ node cli.ts --drive send 1b36b700…/task-1-3 search.results -</span></pre></div>
+        <div class="io sent"><span class="tag">the agent sends</span><pre class="cmdline"><span class="cmd">$ node cli.ts --drive send 1b36b700…/task-1-3 search.results -</span></pre><pre class="payload">{
+  "query": "Roaring River State Park trout fishing kids Cassville Missouri"
+}</pre></div>
         <div class="io recv"><span class="tag">the agent receives</span><pre><span class="cut">…</span>
 
 <span class="h">## To move to state: summarizing (Every query has been answered; the sub-task needs a written finding.)</span>
@@ -362,37 +493,29 @@ summarizing: {
 
 <span class="cut">…</span></pre></div>
       </div>
-    </figure></div>
-    <div><p class="eyebrow"><b>the agent sees, on arrival</b> · the worker in summarizing, handed the paragraph it could not read before</p>
+    </figure></details>
+    <details class="ex"><summary><span><b>the agent sees, on arrival</b> the full instructions, handed over only once the worker is in the state</span></summary>
     <figure class="capture">
       <div class="sign">
-        <div class="io sent"><span class="tag">the agent sends</span><pre class="cmdline"><span class="cmd">$ node cli.ts --drive send 1b36b700…/task-1-3 search.results -</span></pre></div>
+        <div class="io sent"><span class="tag">the agent sends</span><pre class="cmdline"><span class="cmd">$ node cli.ts --drive send 1b36b700…/task-1-3 search.results -</span></pre><pre class="payload">{
+  "query": "Bass Pro Shops Springfield Missouri kids fishing pond Lake Springfield"
+}</pre></div>
         <div class="io recv"><span class="tag">the agent receives</span><pre>Write a finding that answers `data.subQuestion` from the hits you gathered, listing only the sources you actually drew on. `data.question` is the research question it was cut from: it tells you what the finding will be read for, not what to answer. If the hits are too thin, or what the finding turns on rests on snippets you could still read at the source, resume the search with further queries instead. Say in the finding which facts came from snippets alone. If you have searched and nothing you found supports an answer, say so and give the reason: do not pad a finding out, and do not list a source you would not stand behind. A stated absence is worth more to the lead than a finding you do not believe.
 
-<span class="cut">…</span>
-
-<span class="h">## To move to state: complete (The sub-task is finished, with a finding or a stated absence.)</span>
-
-<span class="h">### finding.submit → complete (The sub-question is answered.)</span>
-
-<span class="h">### finding.empty → complete (Nothing found supports an answer.)</span>
-
-<span class="h">## To move to state: searching (Queries are being worked one at a time.)</span>
-
-<span class="h">### search.resume → searching (The hits do not yet answer it.)</span></pre></div>
+<span class="cut">…</span></pre></div>
       </div>
-    </figure></div>
+    </figure></details>
   </div>
 </div></section>
 
-<section class="sec tint"><div class="wrap">
+<section class="sec tint" id="checkpoint"><div class="wrap">
   <div class="sechead">
     <p class="kicker">we're not taking the exit until you say which one and why</p>
     <h2>Every transition is a <em>checkpoint</em>: the agent proves it has what the next state needs.</h2>
-    <p class="lead">The schema is what the agent has to produce to get through, printed under the move while the agent is still choosing, so the proof is never a guess. It can be computed from context, so what a checkpoint asks for can depend on where the run is. A state can carry a schema of its own, the price of entering it by whichever transition arrives; the runtime extends it with the transition's, and the agent reads one contract.</p>
+    <p class="lead">The agent takes a transition by sending its event, and the schema is what that event has to carry, its payload: printed under the transition while the agent is still choosing, so the proof is never a guess. It can be computed from the ledger, so what a checkpoint asks for can depend on where the run is.</p>
   </div>
   <div class="pair">
-    <div><p class="eyebrow"><b>you write</b> · research-task.ts, summarizing trimmed to its two exits and their schemas</p>
+    <details class="ex" open><summary><span><b>the workflow</b> two ways out of a state, each with the schema its event has to carry</span></summary>
     <figure class="source"><pre><span class="k">const</span> source = z.object({ url: z.url(), title: z.string().min(<span class="n">1</span>) })
 
 summarizing: {
@@ -412,8 +535,8 @@ summarizing: {
       …
     },
   },
-},</pre></figure></div>
-    <div><p class="eyebrow"><b>the agent sees</b> · the arrival at summarizing, the finding.submit it sent, and the response</p>
+},</pre></figure></details>
+    <details class="ex"><summary><span><b>the agent sees</b> both schemas printed under their transitions, then a finding that passes and ends the worker's run</span></summary>
     <figure class="capture">
       <div class="sign">
         <div class="io sent"><span class="tag">the agent sends</span><pre class="cmdline"><span class="cmd">$ node cli.ts --drive send 1b36b700…/task-1-3 search.results -</span></pre></div>
@@ -438,15 +561,10 @@ summarizing: {
 
       <div class="sign">
         <div class="io sent"><span class="tag">the agent sends</span><pre class="cmdline"><span class="cmd">$ node cli.ts --drive send 1b36b700…/task-1-3 finding.submit -</span></pre><pre class="payload">{
-  "summary": "All findings come from search-result snippets only; no pages were fetched. Shepherd of the Hills Fish Hatchery (483 Hatchery Rd, Branson, 417-334-4865) is the strongest kid option: MDC runs a free Kids' Fishing Day each June around Free Fishing Weekend at the Bella Donna Education Pond, for anglers 15 and under, no registration, sunfish and channel catfish, loaner poles and worms provided (dates vary yearly, older notices only). An earlier Family Fishing Fair stocked rainbow trout with knot-tying, fly-casting and fish-cleaning stations. Guided hatchery tours run Memorial Day to Labor Day; closed Sundays, Mondays and state holidays. Roaring River State Park (about 7 miles south of Cassville, roughly an hour or more from Branson; park office 417-847-2539) holds a free Kids Fishing Day (a 2026 notice said Saturday May 16, 7am-8pm; earlier years also August), with free trout tags for children 15 and under, a youth-reserved restocked river section, volunteer help, plus a nature center, easy trails and hatchery viewing; adults need paid trout tags and a license. Bass Pro Shops Springfield has indoor catch-and-release ponds and held a free kids fishing event (June 2026 KY3 report); Springfield is about 45 miles from Branson. The name Lake Springfield turned up nothing as a kids stocked-pond venue; the nearby alternative found was Rutledge-Wilson Farm Park pond in Springfield (stocked bass, catfish, bluegill, annual kids day, fee, 2022 sources). Lake Taneycomo (trout below Table Rock Dam) is outside the hatchery scope and only noted: guides offer kid-friendly trips, but it is not a stocked pond or hatchery attraction. Event dates and prices must be confirmed.",
+  "summary": "All findings come from search-result snippets only; no pages were fetched. Shepherd of the Hills Fish Hatchery (483 Hatchery Rd, Branson, 417-334-4865) is the strongest kid option: …",
   "sources": [
     { "url": "https://mdc.mo.gov/newsroom/mdc-invites-young-anglers-kids-fishing-day-june-7-shepherd-hills", "title": "MDC invites young anglers to Kids Fishing Day at Shepherd of the Hills" },
-    { "url": "https://themissouritimes.com/shepherd-of-the-hills-hatchery-conservation-center-summer-activities/", "title": "Shepherd of the Hills Hatchery &amp; Conservation Center summer activities" },
-    { "url": "https://mdc.mo.gov/newsroom/family-fishing-fair-set-saturday-shepherd-hills-hatchery", "title": "Family Fishing Fair set Saturday at Shepherd of the Hills Hatchery" },
-    { "url": "https://mdc.mo.gov/fishing/fishing-prospects/areas/roaring-river-state-park", "title": "Roaring River State Park - MDC fishing prospects" },
-    { "url": "https://ksisradio.com/take-a-day-trip-for-free-kids-fishing-at-roaring-river/", "title": "Take A Day Trip For Free Kids Fishing At Roaring River" },
-    { "url": "https://www.ky3.com/2026/06/11/bass-pro-shops-donates-fishing-rods-kids/", "title": "Bass Pro Shops donates fishing rods to kids" },
-    { "url": "https://www.ky3.com/2022/04/06/moms-money-fishing-rutledge-wilson-farm-park", "title": "Moms and Money: Fishing at Rutledge-Wilson Farm Park" }
+    …
   ]
 }</pre></div>
         <div class="io recv"><span class="tag">the agent receives</span><pre>The result is reported to the lead. Nothing further is asked of you here.
@@ -456,23 +574,19 @@ This actor is done. Nothing more can be sent.
 <span class="foot">---
 1b36b700…/task-1-3 · at complete · done</span></pre></div>
       </div>
-    </figure></div>
+    </figure></details>
   </div>
 </div></section>
 
-<section class="sec"><div class="wrap">
+<section class="sec" id="tools"><div class="wrap">
   <div class="sechead">
     <p class="kicker">hold on, I've got a gadget for that</p>
     <h2>The workflow brings its <em>own</em> tools, and uses them on the way.</h2>
-    <p class="lead">Some of the work in a workflow is not the agent's to do: a lookup, a call to a service, a judgment the workflow would rather make itself. Backseat puts that work on the transition, as an effect: it runs when the agent takes the move, after the checks have passed. Whatever the tool brings back rides the event, and the author decides what of it goes into context and what goes straight to the agent. The agent sends the event and reads what came back; it never holds the tool.</p>
+    <p class="lead">Some of the work in a workflow is not the agent's to do: a lookup, a call to a service, a judgment the workflow would rather make itself. Backseat puts that work on the transition, as an effect: it runs when the agent takes the transition, after the checks have passed. Whatever the tool brings back is attached to the event as its output, and the author decides what of it goes into the ledger and what goes straight to the agent. The agent sends the event and reads what came back; it never holds the tool.</p>
   </div>
   <div class="pair">
-    <div><p class="eyebrow"><b>you write</b> · deep-research.ts, trimmed to the effect and what reads it</p>
-    <figure class="source"><pre><span class="k">type</span> LeadEvent =
-  | { <span class="k">type</span>: <span class="s">'brief.submit'</span>; question: string; output: { rounds: number; budget: string } }
-  …
-
-briefing: {
+    <details class="ex"><summary><span><b>the workflow</b> an effect that asks a small scoring model how many rounds the question warrants, and where its answer goes</span></summary>
+    <figure class="source"><pre>briefing: {
   on: {
     <span class="s">'brief.submit'</span>: {
       target: <span class="s">'planning'</span>,
@@ -489,26 +603,23 @@ briefing: {
 },
 
 planning: {
-  <span class="c">// The landing state's data: the budget from context on every visit, and once, from the effect, why it is what it is.</span>
+  <span class="c">// The landing state's data: the budget from the ledger on every visit, and once, from the effect, why it is what it is.</span>
   <span class="k">data</span>: ({ context, event }) =&gt; ({
     round: context.round + <span class="n">1</span>,
     maxRounds: context.maxRounds,
     ...(event?.<span class="k">type</span> === <span class="s">'brief.submit'</span> &amp;&amp; { budget: event.output.budget }),
   }),
   …
-},</pre></figure></div>
-    <div><p class="eyebrow"><b>the agent sees</b> · the brief.submit it sent, and the arrival at planning</p>
+},</pre></figure></details>
+    <details class="ex"><summary><span><b>the agent sees</b> the budget the effect judged, with its reason, on arrival at planning</span></summary>
     <figure class="capture">
       <div class="sign">
-        <div class="io sent"><span class="tag">the agent sends</span><pre class="cmdline"><span class="cmd">$ node cli.ts --drive send 1b36b700… brief.submit -</span></pre><pre class="payload">{
-  "question": "Where is the best place to take my kids fishing in Branson, MO?"
-}</pre></div>
+        <div class="io sent"><span class="tag">the agent sends</span><pre class="cmdline"><span class="cmd">$ node cli.ts --drive send 1b36b700… brief.submit -</span></pre></div>
         <div class="io recv"><span class="tag">the agent receives</span><pre><span class="cut">…</span>
 
 <span class="h">## Data</span>
 
-- round: number
-1
+<span class="cut">…</span>
 
 - maxRounds: number
 4
@@ -521,249 +632,18 @@ Four rounds at most: the candidates have to be found first, then each examined i
 <span class="foot">---
 1b36b700… · at planning · active</span></pre></div>
       </div>
-    </figure></div>
+    </figure></details>
   </div>
 </div></section>
 
-<section class="sec tint"><div class="wrap">
-  <div class="sechead">
-    <p class="kicker">you drive, I'll keep track</p>
-    <h2>The workflow keeps the <em>record</em>; the agent is read the part it needs, where it needs it.</h2>
-    <p class="lead">Context is the run's one record: what the agent sent, what an effect brought back, what an action worked out, each kept as it was written for as long as the run lasts. A state can declare data: the part of that record the agent is handed while it is there, on every visit. A line written on the first call reads the same on the sixty-ninth, after six workers have come and gone, so the agent is shown the record, not its recollection of it. Any agent holding the actor's id reads the same record with <code>snapshot</code>. What a state does not declare stays hidden.</p>
-  </div>
-  <div class="pair">
-    <div><p class="eyebrow"><b>you write</b> · deep-research.ts, briefing and reviewing, trimmed to the writes and the read</p>
-    <figure class="source"><pre>briefing: {
-  on: {
-    <span class="s">'brief.submit'</span>: {
-      target: <span class="s">'planning'</span>,
-      <span class="k">schema</span>: z.object({ question: z.string().min(<span class="n">10</span>) }),
-      <span class="k">effect</span>: ({ event }) =&gt; judgeMaxRounds(event.question),
-      <span class="c">// Two lines of the record: what the agent sent, and what the effect judged.</span>
-      actions: assign({
-        question: ({ event }) =&gt; event.question,
-        maxRounds: ({ event }) =&gt; event.output.rounds,
-      }),
-    },
-  },
-},
-
-…
-
-reviewing: {
-  <span class="c">// Sixty-six calls and six workers later: the record as written, down to what the workers reported.</span>
-  <span class="k">data</span>: ({ context: { question, round, maxRounds, findings, unanswerable, failed } }) =&gt;
-    ({ question, round, maxRounds, findings: withFiles(findings), unanswerable, failed }),
-  …
-},</pre></figure></div>
-    <div><p class="eyebrow"><b>the agent sees</b> · the brief.submit it sent, and the arrival at reviewing</p>
-    <figure class="capture">
-      <div class="sign">
-        <div class="io sent"><span class="tag">the agent sends</span><pre class="cmdline"><span class="cmd">$ node cli.ts --drive send 1b36b700… brief.submit -</span></pre><pre class="payload">{
-  "question": "Where is the best place to take my kids fishing in Branson, MO?"
-}</pre></div>
-      </div>
-
-      <div class="sign">
-        <div class="io sent"><span class="tag">the agent sends</span><pre class="cmdline"><span class="cmd">$ node cli.ts --drive send 1b36b700… research.review</span></pre></div>
-        <div class="io recv"><span class="tag">the agent receives</span><pre><span class="cut">…</span>
-
-<span class="h">## Data</span>
-
-- question: string
-Where is the best place to take my kids fishing in Branson, MO?
-
-- round: number
-1
-
-- maxRounds: number
-4
-
-- findings: array
-```json
-[
-  {
-    "actorId": "1b36b700…/task-1-1",
-    "subQuestion": "Which Branson-area fishing spots are free or low-cost, with fishing docks, piers or bank access suitable for young children (e.g., Table Rock State Park dock, Moonshine Beach, Branson Landing)? Cover only access, safety and cost, not guided trips.",
-    "sources": [
-      {
-        "url": "https://visitmo.com/things-to-do/lilleys-landing-marina",
-        "title": "Things to Do - Lilleys' Landing Marina (VisitMO)"
-      },
-      <span class="cut">…</span>
-    ],
-    "file": "…/task-1-1.md"
-  },
-  <span class="cut">…</span>
-]
-```
-
-- unanswerable: array
-```json
-[]
-```
-
-- failed: array
-```json
-[]
-```
-
-<span class="cut">…</span>
-
-<span class="foot">---
-1b36b700… · at reviewing · active</span></pre></div>
-      </div>
-    </figure></div>
-  </div>
-</div></section>
-
-<section class="sec"><div class="wrap">
-  <div class="sechead">
-    <p class="kicker">here's who to call and what to tell them</p>
-    <h2>The workflow writes the list; the agent makes the <em>calls</em>.</h2>
-    <p class="lead">A subagent that needs a workflow of its own gets one, with a context of its own. The agent makes the call. It starts the subagent in its own harness and tells it to run the listed command, and that is the whole handoff, because once in the seat the subagent has a backseat driver of its own, with its own instructions, its own refusals and its own record, told only its <code>input</code>. When it is done, Backseat collects its output and merges it into the parent's context at the workflow's discretion. Only what the calling agent needs is surfaced to it.</p>
-  </div>
-  <div class="pair">
-    <div><p class="eyebrow"><b>you write</b> · deep-research.ts, the roster and researching, trimmed to the spawn and the two events</p>
-    <figure class="source"><pre><span class="k">import</span> { researchTask } <span class="k">from</span> <span class="s">'./research-task.ts'</span>   <span class="c">// a machine of its own: the subagent's workflow</span>
-
-<span class="c">// The roster: the machines this workflow can spawn, each under the name its spawns and collections use.</span>
-<span class="k">actors</span>: { researchTask },
-
-…
-
-researching: {
-  …
-  <span class="c">// Spawned on arrival, as an entry action.</span>
-  <span class="k">entry</span>: spawnChild(<span class="s">'researchTask'</span>, {
-    id: ({ context }) =&gt; <span class="s">`task-${context.round}-${context.dispatched}`</span>,
-    <span class="c">// For the agent: what this subagent was sent for, read out on the call that spawns it.</span>
-    <span class="k">about</span>: ({ context }) =&gt; context.current?.subQuestion ?? <span class="s">'(no sub-question)'</span>,
-    <span class="c">// For the subagent: the context its own workflow starts with. Nothing else of the parent's reaches it.</span>
-    <span class="k">input</span>: ({ context }) =&gt; ({ subQuestion: context.current?.subQuestion ?? <span class="s">''</span>, question: context.question }),
-  }),
-  on: {
-    <span class="c">// The next sub-task: re-enter, and spawn again.</span>
-    <span class="s">'task.next'</span>: { guard: hasPending, target: <span class="s">'researching'</span>, reenter: <span class="n">true</span>, actions: assign(takeTask) },
-    <span class="c">// Held until every subagent spawned here has settled. What enters the parent's context is the workflow's call.</span>
-    <span class="s">'research.review'</span>: {
-      guard: queueDrained,
-      target: <span class="s">'reviewing'</span>,
-      actions: collectChildren(<span class="s">'researching'</span>, <span class="s">'researchTask'</span>, assign(({ context, event }) =&gt; {
-        <span class="k">const</span> findings = [...context.findings]
-        <span class="k">for</span> (<span class="k">const</span> site <span class="k">of</span> event.settled)
-          <span class="k">for</span> (<span class="k">const</span> child <span class="k">of</span> site.children) {
-            <span class="k">const</span> report = child.status === <span class="s">'done'</span> ? asReport(child.output) : <span class="n">null</span>
-            …
-            findings.push({ actorId: child.actorId, subQuestion: report.subQuestion, sources: report.sources })
-          }
-        <span class="k">return</span> { findings, … }
-      })),
-    },
-  },
-},</pre></figure></div>
-    <div><p class="eyebrow"><b>the agent sees</b> · the arrival at researching with the first subagent spawned</p>
-    <figure class="capture">
-      <div class="sign">
-        <div class="io sent"><span class="tag">the agent sends</span><pre class="cmdline"><span class="cmd">$ node cli.ts --drive send 1b36b700… plan.submit -</span></pre></div>
-        <div class="io recv"><span class="tag">the agent receives</span><pre>This machine picked which of your proposed sub-tasks run this round, and in what order; those not picked are not run, and you may propose them again in a later round. For each one, spawn a subagent and tell it to run the listed command: each worker's searches and pages then stay out of your context, and the workers run side by side. Keep dispatching while another sub-task is offered, then wait until all of your subagents are complete before moving to review.
-
-<span class="h">## To move to state: researching (Workers are being dispatched and are running.)</span>
-
-<span class="h">### task.next → researching (Another sub-task is waiting to be dispatched.)</span>
-
-<span class="sch">    no payload</span>
-
-<span class="h">## Subagents to start</span>
-
-- 1b36b700…/task-1-1 — Which Branson-area fishing spots are free or low-cost, with fishing docks, piers or bank access suitable for young children (e.g., Table Rock State Park dock, Moonshine Beach, Branson Landing)? Cover only access, safety and cost, not guided trips.
-  `node cli.ts --drive snapshot 1b36b700…/task-1-1`
-
-<span class="foot">---
-1b36b700… · at researching · active</span></pre></div>
-      </div>
-    </figure></div>
-    <div><p class="eyebrow"><b>the subagent sees</b> · the snapshot its driver was told to run: its own first arrival, a record of two keys, nothing of the parent's</p>
-    <figure class="capture">
-      <div class="sign">
-        <div class="io sent"><span class="tag">the subagent sends</span><pre class="cmdline"><span class="cmd">$ node cli.ts --drive snapshot 1b36b700…/task-1-3</span></pre></div>
-        <div class="io recv"><span class="tag">the subagent receives</span><pre>You have been handed this actor for `data.subQuestion`. Propose 2-5 search queries that together answer it. Each must stand alone as a search string. `data.question` is the research question your sub-question was cut from: it is there so you know what your finding will be read for, and is not yours to answer.
-
-<span class="h">## Data</span>
-
-- question: string
-Where is the best place to take my kids fishing in Branson, MO?
-
-- subQuestion: string
-Are there stocked ponds, trout parks or hatchery attractions near Branson (Shepherd of the Hills Fish Hatchery, Bass Pro Shops, Lake Springfield, Roaring River State Park) good for kids? Cover only these hatchery and stocked-water options.
-
-<span class="h">## To move to state: searching (Queries are being worked one at a time.)</span>
-
-<span class="h">### queries.submit → searching (The queries are chosen.)</span>
-
-<span class="sch">    queries: string[]   // min 2 items, max 5 items, each: min length 3</span>
-
-<span class="cut">…</span>
-
-<span class="foot">---
-1b36b700…/task-1-3 · at briefing · active</span></pre></div>
-      </div>
-    </figure></div>
-  </div>
-</div></section>
-
-<section class="sec tint"><div class="wrap">
-  <div class="sechead">
-    <p class="kicker">I storyboarded the whole trip</p>
-    <h2>Your workflow, <em>notes</em> and all, in the XState machine viewer.</h2>
-    <p class="lead">Backseat is built on XState, and Stately Studio draws XState: the states, the transitions between them, laid out and connected. Everything Backseat adds, the instructions, the payloads, the data, is rendered into the descriptions, so the drawing says what each state will say to the agent. It is for looking at. Nothing reads it back.</p>
-  </div>
-  <div class="pair">
-    <div><p class="eyebrow"><b>you write</b> · one command, and a file per machine to import</p>
-    <div class="asphalt term"><pre><span class="k">$ node cli.ts stately</span>
-<b>…/deep-research.stately.ts
-…/deep-research.researchTask.stately.ts</b></pre></div></div>
-    <div><p class="eyebrow"><b>you see</b> · the lead machine drawn in Stately Studio, briefing through drafting</p>
-    <figure class="shot"><img class="light" src="/stately-light.png" width="3646" height="2134" alt="Stately Studio drawing the deep-research lead machine: briefing, planning, researching, reviewing and drafting, each with its description and instructions, with the spawn edge to the research task" loading="lazy"><img class="dark" src="/stately-dark.png" width="3646" height="2134" alt="" loading="lazy"></figure></div>
-  </div>
-</div></section>
-
-<section class="sec"><div class="wrap">
-  <div class="sechead">
-    <p class="kicker">I'll tell you everything, once we're on the road</p>
-    <h2>The agent reads nothing before it starts and, even then, only what it <em>needs</em>.</h2>
-    <p class="lead">Most agents start under a wall of instructions: every rule, every step, every case, read before anything has happened and carried through everything after. Here there is nothing to read first. The agent starts the workflow, and from then on it is told what it needs when it needs it: what to do in the state it is in, which transitions are open from there, and nothing about the rest of the workflow until it gets there.</p>
-  </div>
-  <div class="asphalt term"><pre><span class="k">$ node cli.ts --drive create deep-research</span></pre></div>
-</div></section>
-
-<section class="sec tint"><div class="wrap">
-  <div class="sechead">
-    <p class="kicker">you know this neighborhood</p>
-    <h2>Instructions <em>adapt</em> to the visit.</h2>
-    <p class="lead">A state's instructions are told which visit this is, and say what that visit needs. Here the first visit explains the whole job; every return, with that explanation still in the agent's context, gets one line that points back to it.</p>
-  </div>
-  <div class="pair">
-    <div><p class="eyebrow"><b>you write</b> · research-task.ts, the worker's searching state, cut to its instructions</p>
-    <figure class="source"><pre>searching: {
-  <span class="k">description</span>: <span class="s">'Queries are being worked one at a time.'</span>,
-  <span class="k">instructions</span>: ({ visit }) =&gt;
-    visit === <span class="s">'first'</span>
-      <span class="c">// the first visit</span>
-      ? <span class="s">'You are handed one query at a time as `data.current`. Run it with whatever web search you have …'</span>
-      <span class="c">// every visit after</span>
-      : <span class="s">'Run `data.current` and report it done, naming the query.'</span>,</pre></figure></div>
-  </div>
-</div></section>
-
-<section class="sec"><div class="wrap">
+<section class="sec tint" id="refusal"><div class="wrap">
   <div class="sechead">
     <p class="kicker">I looked it up. they're closed</p>
-    <h2>Some reasons to refuse only turn up <em>mid-move</em>.</h2>
-    <p class="lead">While a guard can keep a transition from being shown, some reasons to refuse are only found partway through the move: an effect or an action finds one, and says so in the author's words. The workflow rejects the event with that message, says the actor has not moved, and prints the arrival again, so the next call is the corrected one.</p>
+    <h2>Some reasons to refuse only turn up <em>mid-transition</em>.</h2>
+    <p class="lead">While a guard can keep a transition from being shown, some reasons to refuse are only found partway through the transition: an effect, or an action writing to the ledger, finds one and says so in the author's words. The workflow rejects the event with that message, says the actor has not moved, and prints the arrival again, so the next call is the corrected one.</p>
   </div>
   <div class="pair">
-    <div><p class="eyebrow"><b>you write</b> · research-task.ts, the worker's finding.submit, with the effect that checks its sources</p>
+    <details class="ex"><summary><span><b>the workflow</b> an effect that checks each cited source and rejects the event when one is gone</span></summary>
     <figure class="source"><pre><span class="k">import</span> { backseat, RejectedEvent } <span class="k">from</span> <span class="s">'backseat-ai'</span>
 
 <span class="s">'finding.submit'</span>: {
@@ -771,19 +651,12 @@ Are there stocked ponds, trout parks or hatchery attractions near Branson (Sheph
   <span class="k">description</span>: <span class="s">'The sub-question is answered.'</span>,
   <span class="k">schema</span>: z.object({ summary: z.string().min(<span class="n">80</span>), sources: z.array(source).min(<span class="n">1</span>) }),
   <span class="c">// The sources are checked at the source: a run once accepted a citation its own title called "page 404'd".</span>
-  <span class="c">// Only a page the server says is gone is refused; any other status, and any failure to reach it, passes,</span>
-  <span class="c">// since a page that blocks bots is not a page that is gone. Some servers answer HEAD with 404 and GET with the</span>
-  <span class="c">// page, so a HEAD that says gone is confirmed with a GET.</span>
+  <span class="c">// …</span>
   <span class="k">effect</span>: <span class="k">async</span> ({ event }) => {
-    <span class="k">const</span> statusOf = (url: string, method: <span class="s">'HEAD'</span> | <span class="s">'GET'</span>) =>
-      fetch(url, { method, signal: AbortSignal.timeout(<span class="n">10_000</span>) }).then(
-        (res) => (res.body?.cancel(), res.status),
-        () => <span class="n">0</span>,
-      )
+    …
     <span class="k">const</span> gone = <span class="k">await</span> Promise.all(
       event.sources.map(<span class="k">async</span> ({ url }) => {
-        <span class="k">const</span> head = <span class="k">await</span> statusOf(url, <span class="s">'HEAD'</span>)
-        <span class="k">const</span> status = head === <span class="n">404</span> || head === <span class="n">410</span> ? <span class="k">await</span> statusOf(url, <span class="s">'GET'</span>) : head
+        …
         <span class="k">return</span> status === <span class="n">404</span> || status === <span class="n">410</span>
           ? <span class="s">`${url} is gone (HTTP ${status}). Cite the page you read instead, or drop it and say what rested on it.`</span>
           : <span class="k">null</span>
@@ -792,8 +665,8 @@ Are there stocked ponds, trout parks or hatchery attractions near Branson (Sheph
     <span class="k">const</span> reasons = gone.filter((reason) => reason !== <span class="k">null</span>)
     <span class="k">if</span> (reasons.length > <span class="n">0</span>) <span class="k">throw new</span> RejectedEvent(reasons.join(<span class="s">'\n'</span>))
   },
-  actions: assign({ summary: ({ event }) => event.summary, sources: ({ event }) => event.sources }),
-},</pre></figure></div>
+  …
+},</pre></figure></details>
     <div><p class="eyebrow"><b>the agent sees</b> · the worker's finding, refused on a source that is gone</p>
     <!-- STAGED: not from run 1. Real output of finding.submit refused on a gone source, driven in a scratch state dir on 2026-11-07, with the actor id set to run 1's task-1-3. Run 1 (1b36b700…) has no such refusal. Gone source: https://mdc.mo.gov/events/kids-fishing-day-shepherd-hills-hatchery-2019, curl HEAD 404 and GET 404; the effect's check is HEAD, confirmed by GET on a 404 or 410. -->
     <figure class="capture">
@@ -828,53 +701,100 @@ Offered — each shown in full on an earlier response in this state; call descri
   </div>
 </div></section>
 
-<section class="sec tint"><div class="wrap">
+<section class="sec" id="subagents"><div class="wrap">
   <div class="sechead">
-    <p class="kicker">we're not leaving until everyone's back in the car</p>
-    <h2>The workflow <em>continues</em> until the subagents' work is needed.</h2>
-    <p class="lead">While the subagents work, the workflow keeps going. The first move that needs what they produce is held until all of them have finished. Sent early, it is refused, naming the subagents still incomplete. Sent once they are back, it brings their work into context.</p>
+    <p class="kicker">here's who to call and what to tell them</p>
+    <h2>The workflow lists the subagents; the agent <em>starts</em> them.</h2>
+    <p class="lead">A subagent that needs a workflow of its own gets one, with a ledger of its own. The agent makes the call. It starts the subagent and tells it to run the listed command, which hands the subagent a workflow of its own, and that is the whole handoff, because once in the seat the subagent has a backseat driver of its own, with its own instructions, its own refusals and its own ledger, told only its <code>input</code>. While the subagents work, the agent carries on through the workflow. The first transition that needs what they produce is not offered until all of them have finished; sent anyway, it is refused, naming the subagents still out. Sent once they are back, it brings their work into the parent's ledger at the workflow's discretion. Only what the calling agent needs is surfaced to it.</p>
   </div>
   <div class="pair">
-    <div><p class="eyebrow"><b>you write</b> · report.ts, the two states of a minimal report workflow: titling spawns two writers, awaiting collects what they wrote</p>
-    <figure class="source"><pre>titling: {
-  <span class="k">description</span>: <span class="s">'The title is being written while the sections are.'</span>,
-  <span class="c">// Two subagents, one per section, started as the agent arrives.</span>
-  <span class="k">entry</span>: [
-    spawnChild(<span class="s">'writer'</span>, { id: () =&gt; <span class="s">'introduction'</span>, input: () =&gt; ({ section: <span class="s">'introduction'</span> }) }),
-    spawnChild(<span class="s">'writer'</span>, { id: () =&gt; <span class="s">'findings'</span>, input: () =&gt; ({ section: <span class="s">'findings'</span> }) }),
-  ],
-  <span class="k">instructions</span>: <span class="s">'Two subagents are writing the sections: start each with the command listed for it, then write the title yourself.'</span>,
+    <details class="ex"><summary><span><b>the workflow</b> a state that starts a subagent's workflow on arrival, and a transition held until every subagent has finished</span></summary>
+    <figure class="source"><pre><span class="k">import</span> { researchTask } <span class="k">from</span> <span class="s">'./research-task.ts'</span>   <span class="c">// a machine of its own: the subagent's workflow</span>
+
+<span class="c">// The roster: the machines this workflow can spawn, each under the name its spawns and collections use.</span>
+<span class="k">actors</span>: { researchTask },
+
+…
+
+researching: {
+  …
+  <span class="c">// Spawned on arrival, as an entry action.</span>
+  <span class="k">entry</span>: spawnChild(<span class="s">'researchTask'</span>, {
+    id: ({ context }) =&gt; <span class="s">`task-${context.round}-${context.dispatched}`</span>,
+    <span class="c">// For the agent: what this subagent was sent for, read out on the call that spawns it.</span>
+    <span class="k">about</span>: ({ context }) =&gt; context.current?.subQuestion ?? <span class="s">'(no sub-question)'</span>,
+    <span class="c">// For the subagent: the ledger its own workflow starts with. Nothing else of the parent's reaches it.</span>
+    <span class="k">input</span>: ({ context }) =&gt; ({ subQuestion: context.current?.subQuestion ?? <span class="s">''</span>, question: context.question }),
+  }),
   on: {
-    <span class="s">'title.submit'</span>: { target: <span class="s">'awaiting'</span>, schema: z.object({ title: z.string().min(<span class="n">3</span>) }), actions: assign({ title: ({ event }) =&gt; event.title }) },
-  },
-},
-<span class="c">// Reached while the sections are still being written. Nothing here needs them yet.</span>
-awaiting: {
-  <span class="k">description</span>: <span class="s">'The title is set; the sections are still being written.'</span>,
-  <span class="k">instructions</span>: <span class="s">'Wait for both subagents to finish, then assemble the report.'</span>,
-  <span class="k">data</span>: ({ context: { title } }) =&gt; ({ title }),
-  on: {
-    <span class="s">'sections.assemble'</span>: {
-      target: <span class="s">'assembled'</span>,
-      <span class="c">// The first move that needs the sections. Not offered until both writers have settled; sent before that,</span>
-      <span class="c">// it is refused, naming the ones still out. Taken, it brings what they wrote into context.</span>
-      actions: collectChildren(<span class="s">'titling'</span>, <span class="s">'writer'</span>, assign({
-        sections: ({ event }) =&gt; event.settled.flatMap((site) =&gt; site.children.map((child) =&gt; child.output)),
-      })),
+    <span class="c">// The next sub-task: re-enter, and spawn again.</span>
+    <span class="s">'task.next'</span>: { guard: hasPending, target: <span class="s">'researching'</span>, reenter: <span class="n">true</span>, actions: assign(takeTask) },
+    <span class="c">// Held until every subagent spawned here has settled. What enters the parent's ledger is the workflow's call.</span>
+    <span class="s">'research.review'</span>: {
+      guard: queueDrained,
+      target: <span class="s">'reviewing'</span>,
+      actions: collectChildren(<span class="s">'researching'</span>, <span class="s">'researchTask'</span>, assign(…)),
     },
   },
-},</pre></figure></div>
+},</pre></figure></details>
+    <details class="ex"><summary><span><b>the agent sees</b> arriving at researching with a subagent to start and the command to hand it</span></summary>
+    <figure class="capture">
+      <div class="sign">
+        <div class="io sent"><span class="tag">the agent sends</span><pre class="cmdline"><span class="cmd">$ node cli.ts --drive send 1b36b700… plan.submit -</span></pre></div>
+        <div class="io recv"><span class="tag">the agent receives</span><pre>This machine picked which of your proposed sub-tasks run this round, and in what order; those not picked are not run, and you may propose them again in a later round. For each one, spawn a subagent and tell it to run the listed command: each worker's searches and pages then stay out of your context, and the workers run side by side. Keep dispatching while another sub-task is offered, then wait until all of your subagents are complete before moving to review.
+
+<span class="h">## To move to state: researching (Workers are being dispatched and are running.)</span>
+
+<span class="h">### task.next → researching (Another sub-task is waiting to be dispatched.)</span>
+
+<span class="sch">    no payload</span>
+
+<span class="h">## Subagents to start</span>
+
+- 1b36b700…/task-1-1 — Which Branson-area fishing spots are free or low-cost, with fishing docks, piers or bank access suitable for young children (e.g., Table Rock State Park dock, Moonshine Beach, Branson Landing)? Cover only access, safety and cost, not guided trips.
+  `node cli.ts --drive snapshot 1b36b700…/task-1-1`
+
+<span class="foot">---
+1b36b700… · at researching · active</span></pre></div>
+      </div>
+    </figure></details>
+    <details class="ex"><summary><span><b>the third subagent sees</b> the subagent's own first arrival after running that command: its sub-question and the question it was cut from, nothing else of the parent's</span></summary>
+    <figure class="capture">
+      <div class="sign">
+        <div class="io sent"><span class="tag">the subagent sends</span><pre class="cmdline"><span class="cmd">$ node cli.ts --drive snapshot 1b36b700…/task-1-3</span></pre></div>
+        <div class="io recv"><span class="tag">the subagent receives</span><pre>You have been handed this actor for `data.subQuestion`. Propose 2-5 search queries that together answer it. Each must stand alone as a search string. `data.question` is the research question your sub-question was cut from: it is there so you know what your finding will be read for, and is not yours to answer.
+
+<span class="h">## Data</span>
+
+- question: string
+Where is the best place to take my kids fishing in Branson, MO?
+
+- subQuestion: string
+Are there stocked ponds, trout parks or hatchery attractions near Branson (Shepherd of the Hills Fish Hatchery, Bass Pro Shops, Lake Springfield, Roaring River State Park) good for kids? Cover only these hatchery and stocked-water options.
+
+<span class="h">## To move to state: searching (Queries are being worked one at a time.)</span>
+
+<span class="h">### queries.submit → searching (The queries are chosen.)</span>
+
+<span class="sch">    queries: string[]   // min 2 items, max 5 items, each: min length 3</span>
+
+<span class="cut">…</span>
+
+<span class="foot">---
+1b36b700…/task-1-3 · at briefing · active</span></pre></div>
+      </div>
+    </figure></details>
   </div>
 </div></section>
 
-<section class="sec"><div class="wrap">
+<section class="sec tint" id="trace"><div class="wrap">
   <div class="sechead">
     <p class="kicker">sit down, I made a slideshow of the trip</p>
-    <h2>Every call is in the <em>record</em>, and the report walks you through it.</h2>
-    <p class="lead">Every call an agent makes lands in the record: the state the actor was in, the move it took or was refused and the reason, and what an effect brought back. The trace report draws each actor's journey from it, the states it stopped in and the calls answered from each. A run is assessed from the workflow's record, never from the agent's account. That is how a workflow improves: a wrong turn sits under one state, so the instructions to fix are that state's. Fix them, run again, and the next report says whether it worked.</p>
+    <h2>Every call is in the <em>trace</em>, and the report walks you through it.</h2>
+    <p class="lead">Every call an agent makes lands in the trace: the state the actor was in, the transition it took or was refused and the reason, and what an effect brought back. The trace report draws each actor's journey from it, the states it stopped in and the calls answered from each. A run is assessed from the workflow's trace, never from the agent's account. That is how a workflow improves: a wrong turn sits under one state, so the instructions to fix are that state's. Fix them, run again, and the next report says whether it worked.</p>
   </div>
   <div class="pair">
-    <div><p class="eyebrow"><b>you see</b> · the trace report for run 1, the lead's journey, the refused call selected</p>
+    <div><p class="eyebrow"><b>you see</b> · the trace report for run 1, the lead's journey, with a refused call selected: task.next, sent when it was no longer offered</p>
     <div class="asphalt card term">
       <div class="strip"><span class="pre"><span class="d">$</span> npx backseat-ai report</span></div>
 <pre><span class="p">#  machine        root      status  started           last call         calls  undeclared  where</span>
@@ -946,7 +866,7 @@ Report which run? [1-1] <span class="k">1</span>
           </div>
           <div class="stop">
             <h3>complete<small>after citations.submit · done</small></h3>
-            <p class="steps"><code>citations.submit</code> → citing.checking then <code>always</code><span class="if">if</span><code>citationsHold</code> → citing.accepted then <code>xstate.done.state.deepResearch.citing</code> → complete</p>
+            <p class="steps"><code>citations.submit</code> → citing.checking then … → complete</p>
           </div>
         </div>
         <div class="detail">
@@ -967,53 +887,53 @@ Report which run? [1-1] <span class="k">1</span>
         </div>
       </div>
     </figure></div>
+    <details class="ex"><summary><span><b>the agent sees</b> the answer this run produced: the lead's draft, read back from the ledger to be cited</span></summary>
+    <figure class="capture">
+      <div class="sign">
+        <div class="io sent"><span class="tag">the agent sends</span><pre class="cmdline"><span class="cmd">$ node cli.ts --drive send 1b36b700… draft.submit -</span></pre></div>
+        <div class="io recv"><span class="tag">the agent receives</span><pre><span class="cut">…</span>
+
+<span class="h">## Data</span>
+
+- draft: string
+Where to take your kids fishing in Branson, MO
+
+Short answer: for young or first-time anglers, start with the MDC-stocked ponds at Eiserman Park in Branson, where kids can fish free. For a classic Branson outing on real water, go to Lake Taneycomo, where Lilleys' Landing Resort and Marina lists dock fishing as free and the lake is stocked with trout.
+
+Top picks
+1. Eiserman Park ponds (Branson). The Missouri Department of Conservation stocks two ponds here and kids fish free. Small, easy water suits young children.
+2. Lake Taneycomo. Cold, stocked trout water with several access points, including Lilleys' Landing, the Fall Creek area, Branson Landing and the MDC Rockaway Beach access. Check dam water-release schedules and have children wear life jackets, as the current can change quickly.
+
+<span class="cut">…</span>
+
+<span class="foot">---
+1b36b700… · at citing.awaiting · active</span></pre></div>
+      </div>
+    </figure></details>
   </div>
 </div></section>
 
-<section class="sec tint"><div class="wrap">
-  <div class="sechead prose">
-    <p class="kicker">I've seen how you drive without me</p>
-    <h2>A workflow that is <em>enforced</em>, not described.</h2>
-    <p class="lead">Backseat came from wanting more from workflows that ran on instructions alone. Each was a long prompt describing the steps, and even a frontier model treated it as a description: mostly followed, never enforced. The want was a workflow that holds its shape whichever model is in it.</p>
-    <p class="body">So the shape is written down and enforced. You decide what can happen: the states, the transitions out of each, the guard on each one, the schema it must be sent with. The model decides what does. The workflow is semi-deterministic: every step is fixed, and the rest is the model's judgment, what it does inside the step it is in and, where more than one transition is open, which one it takes.</p>
-    <p class="body">A model handed one step at a time, with its instructions and its schema, and refused with a reason when it strays, runs a workflow it could not have run from the prompt. It does not have to be a frontier model. A cheaper one, in the same workflow, handles multi-step work it could not on its own.</p>
-  </div>
-</div></section>
-
-<section class="sec"><div class="wrap">
+<section class="sec" id="viewer"><div class="wrap">
   <div class="sechead">
-    <p class="kicker">three roads. all of them signposted</p>
-    <h2>Every command says <em>where</em> it runs.</h2>
-    <p class="lead">One command comes with the package and reads no project: <code>npx backseat-ai</code>. Everything that reads your machines runs through your project's own <code>cli.ts</code>, which <code>init</code> writes: your commands plainly, the agent's under <code>--drive</code>.</p>
+    <p class="kicker">I storyboarded the whole trip</p>
+    <h2>Your workflow, <em>instructions</em> and all, in the XState machine viewer.</h2>
+    <p class="lead">Backseat is built on XState, and Stately Studio draws XState: the states, the transitions between them, laid out and connected. Everything Backseat adds, the instructions, the payloads, the data, is rendered into the descriptions, so the drawing says what each state will say to the agent. It is for looking at. Nothing reads it back.</p>
   </div>
-  <div class="cards">
-    <div class="asphalt card">
-      <div class="strip"><span class="pre">npx backseat-ai <i>…</i></span><span class="sub">from anywhere · reads no project</span></div>
-      <div class="row"><span class="c">init</span><span class="g">Sets the working directory up as a project: package.json, tsconfig.json, cli.ts and a catalog. Finishes whatever is missing; replaces nothing you wrote without a yes.</span></div>
-      <div class="row"><span class="c">report</span><span class="g">Lists the runs it can find and renders one as a trace report. <code>report &lt;prefix&gt;</code> picks a run by its root id; <code>report &lt;dir&gt;</code> renders any directory holding a trace.</span></div>
-      <div class="row"><span class="c">output <i>&lt;actorId&gt;</i></span><span class="g">Prints a finished actor's output.</span></div>
-      <div class="row"><span class="c">doctor</span><span class="g">Proposes removing live runs nobody has touched in 14 days.</span></div>
-    </div>
-    <div class="asphalt card">
-      <div class="strip"><span class="pre">node cli.ts <i>…</i></span><span class="sub">in your project · your project's front</span></div>
-      <div class="row"><span class="c">lint</span><span class="g">Reports what the style rules can establish about each machine of the project.</span></div>
-      <div class="row"><span class="c">stately</span><span class="g">Writes each machine, and the machines it spawns, as a file to import into Stately Studio.</span></div>
-    </div>
-    <div class="asphalt card">
-      <div class="strip"><span class="pre">node cli.ts --drive <i>…</i></span><span class="sub">the agent's tool · the same front, under --drive</span></div>
-      <div class="row"><span class="c">create <i>&lt;machine&gt;</i></span><span class="g">Starts a fresh actor. The response is its id, its state and the transitions enabled from there.</span></div>
-      <div class="row"><span class="c">send <i>&lt;actorId&gt; &lt;event&gt; [payload | -]</i></span><span class="g">The only way to move an actor. Payload keys follow the schema shown for that event; <code>-</code> reads the JSON from stdin.</span></div>
-      <div class="row"><span class="c">snapshot <i>&lt;actorId&gt;</i></span><span class="g">The current state and enabled transitions, unchanged. How to orient when handed an id.</span></div>
-      <div class="row"><span class="c">describe <i>&lt;actorId&gt; [&lt;event&gt;]</i></span><span class="g">With an event, that one move and its schema; without, the current state with its full first-arrival instructions.</span></div>
-    </div>
+  <div class="pair">
+    <div><p class="eyebrow"><b>you run</b> · one command, and a file per machine to import</p>
+    <div class="asphalt term"><pre><span class="k">$ node cli.ts stately</span>
+<b>…/deep-research.stately.ts
+…/deep-research.researchTask.stately.ts</b></pre></div></div>
+    <div><p class="eyebrow"><b>you see</b> · the lead machine drawn in Stately Studio, briefing through drafting</p>
+    <figure class="shot"><img class="light" src="/stately-light.png" width="3646" height="2134" alt="Stately Studio drawing the deep-research lead machine: briefing, planning, researching, reviewing and drafting, each with its description and instructions, with the spawn edge to the research task" loading="lazy"><img class="dark" src="/stately-dark.png" width="3646" height="2134" alt="" loading="lazy"></figure></div>
   </div>
 </div></section>
 
-<section class="sec tint"><div class="wrap">
+<section class="sec tint" id="start"><div class="wrap">
   <div class="sechead">
     <p class="kicker">scoot over. I'm getting in the back</p>
-    <h2>One command, and the back seat is <em>taken</em>.</h2>
-    <p class="lead"><code>init</code> sets the directory up as a project and, with no machine to find in your source, offers a starter: one state, one move, then finished. Run it again any time; it finishes what is missing and leaves the rest alone. For the coding agent that writes your workflows, <code>npx skills add pottedmeat/backseat-ai --skill backseat-ai</code> installs a companion skill.</p>
+    <h2>One prompt, and the back seat is <em>taken</em>.</h2>
+    <p class="lead">Paste one of <a href="#prompts">the prompts at the top</a> into your coding agent and you run nothing yourself: it installs the companion skill, runs <code>init</code>, and writes the workflow with you. To run the workflow, tell your agent to run <code>node cli.ts --drive create &lt;machine&gt;</code> and to follow what it prints. By hand, the one command is <code>init</code>: it sets the directory up as a project and, with no machine to find in your source, offers a starter: one state, one transition, then finished. Run it again any time; it finishes what is missing and leaves the rest alone. Every command is in the <a href="https://github.com/pottedmeat/backseat-ai/blob/trunk/docs/cli.md">CLI reference</a>.</p>
   </div>
   <div class="asphalt card term">
     <div class="strip"><span class="pre"><span class="d">$</span> npx backseat-ai init</span><button class="tag" type="button" data-copy>COPY</button></div>
@@ -1057,7 +977,19 @@ ok        node cli.ts --drive — fronts my-agent</b>
   Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'), function (el) {
     el.addEventListener('click', function () {
       var tag = el.classList.contains('tag') ? el : el.querySelector('.tag');
-      try { navigator.clipboard.writeText('npx backseat-ai init').then(function () { tag.textContent = 'COPIED'; setTimeout(function () { tag.textContent = 'COPY'; }, 1400); }).catch(function () {}); } catch (e) {}
+      var src = el.getAttribute('data-copy'), text = src ? document.getElementById(src).textContent.replace(/\s+/g, ' ').trim() : 'npx backseat-ai init';
+      try { navigator.clipboard.writeText(text).then(function () { tag.textContent = 'COPIED'; setTimeout(function () { tag.textContent = 'COPY'; }, 1400); }).catch(function () {}); } catch (e) {}
+    });
+  });
+
+  var tabs = document.querySelectorAll('.tabs [role="tab"]');
+  Array.prototype.forEach.call(tabs, function (tab) {
+    tab.addEventListener('click', function () {
+      Array.prototype.forEach.call(tabs, function (t) {
+        var on = t === tab;
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+        document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+      });
     });
   });
 })();
