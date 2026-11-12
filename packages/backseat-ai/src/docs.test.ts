@@ -7,6 +7,10 @@ import { describe, expect, it } from 'vitest'
 // `docs/` and in the `backseat-ai` skill names the file it was taken from, after its language (```ts packages/backseat-ai/src/compiler/machine.ts),
 // and must appear in that file word for word. A renamed key, a reworded refusal or a re-recorded response fails here
 // rather than leaving a doc that quietly describes something else.
+//
+// One exception: a fence whose source ends in `@<commit>` quotes a file as it stood at that commit, kept as an example
+// after the code it shows was removed. It is not checked against today's source, only against its own claim: if the
+// file has the excerpt again, the `@<commit>` is wrong and the fence should be checked like any other.
 
 const ROOT = fileURLToPath(new URL('../../../', import.meta.url))
 const DOCS = `${ROOT}docs/`
@@ -61,8 +65,11 @@ describe('the docs and the skill', () => {
 
   it.each(all.map((f) => [`${f.doc}:${f.line}`, f] as const))('%s names its source and quotes it word for word', (_, fence) => {
     expect(fence.source, 'name the file this was taken from after the fence language').toBeDefined()
-    const path = `${ROOT}${fence.source}`
-    expect(existsSync(path), `${fence.source} does not exist`).toBe(true)
-    expect(quotes(readFileSync(path, 'utf8'), fence.body), `not in ${fence.source} word for word`).toBe(true)
+    const [file, retiredAt] = fence.source!.split('@')
+    const path = `${ROOT}${file}`
+    expect(existsSync(path), `${file} does not exist`).toBe(true)
+    const quoted = quotes(readFileSync(path, 'utf8'), fence.body)
+    if (retiredAt) expect(quoted, `${file} has this excerpt, so drop the @${retiredAt}`).toBe(false)
+    else expect(quoted, `not in ${fence.source} word for word`).toBe(true)
   })
 })

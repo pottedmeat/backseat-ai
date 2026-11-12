@@ -8,7 +8,6 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@typesafe-ai/sdk": "^0.6.0",
     "backseat-ai": "workspace:*",
     "xstate": "^5.32.6",
     "zod": "^4.5.4"

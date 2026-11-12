@@ -12,6 +12,10 @@ Every response below is a call from run 1 of the deep-research demo, as its driv
 (`demos/deep-research/recorded/1/calls/`). Each file is headed by the command, any stdin, and the exit code. The
 recording wrapper adds that header. The tool prints everything under it.
 
+Run 1 predates the demo dropping the two effects it then had on `brief.submit` and `plan.submit`: one judged the round
+budget from the question, the other picked which of the lead's proposed sub-tasks ran. The responses below are that
+run's, so `003` and `004` show a `budget` and a wording the demo's source no longer has.
+
 ## The commands
 
 A driver meets four commands, and the usage response is where it meets them. That's what the tool prints with no
@@ -149,8 +153,8 @@ Otherwise it says `No move is offered from here right now.`
 ### Data
 
 `## Data` prints one field per key, `- <key>: <type>` with the value under it. On the response to a `send`, `data` is
-also handed that send's event, so what it shows from the event is shown once. Here `budget` came from the effect on
-`brief.submit`, and a `snapshot` in `planning` wouldn't show it:
+also handed that send's event, so what it shows from the event is shown once. In run 1 `budget` came from the effect
+then on `brief.submit`, and a `snapshot` in `planning` wouldn't show it:
 
 ```text demos/deep-research/recorded/1/calls/003.txt
 ## Data

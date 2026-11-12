@@ -20,10 +20,6 @@ node cli.ts --drive send <actorId> brief.submit - <<'JSON'
 JSON
 ```
 
-Two of the lead's effects call TypeSafe ([`judgments.ts`](./judgments.ts)): how many rounds a question warrants, and
-which proposed sub-tasks run. Set `TYPESAFE_API_KEY`, in the environment or in a `.env` in this directory, before
-driving it.
-
 The catalog names only the lead: `researchTask` is reached through the lead's roster, and a subagent drives each
 worker with the same tool as `<root>/<key>`, from this directory too.
 
@@ -46,8 +42,7 @@ table, not a diff. For each thing the reference tells an agent to do, the machin
 deliberate or fixed as an oversight. It does not mean parity, because forcing in structure what the reference only
 asks for is the point of the demo. The reference's numbers are divergences in this sense. It gives worker counts by
 query complexity (at most 20) and a per-worker budget of tool calls (stop near 15 calls or 100 sources). This machine
-instead has a round budget judged from the question, 10 to 40 proposed sub-tasks a round, of which the machine picks
-some, and 2 to 5 queries a worker.
+instead has a budget of 3 rounds, 1 to 10 sub-tasks a round, each of which runs, and 2 to 5 queries a worker.
 
 [`claude-agent-sdk-demos/research-agent`](https://github.com/anthropics/claude-agent-sdk-demos/tree/main/research-agent)
 is not the reference, though it is Anthropic's only runnable multi-agent research code. It has no citation agent, no

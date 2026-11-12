@@ -359,7 +359,11 @@ machine picks, so the agent doesn't trim the list to its own choices. Keep what 
 round budget, and show the reason through `data` on the one response it arrives on, so it is never stored. Make any
 client the effect needs inside the call, so building the machine needs no key.
 
-```ts demos/deep-research/deep-research.ts
+deep-research did both with Jev, TypeSafe's System One model, until the demo dropped the dependency. The excerpts are
+the demo as it stood at commit `4a7436b`, where `demos/deep-research/judgments.ts` holds the two judgments whole; they
+are kept as the example and are not in today's source.
+
+```ts demos/deep-research/deep-research.ts@4a7436b
 // The budget is judged from the question, not set by the lead: TypeSafe scores it from 1 to 10 rounds.
 effect: ({ event }) => judgeMaxRounds(event.question),
 actions: assign({
@@ -368,7 +372,7 @@ actions: assign({
 }),
 ```
 
-```ts demos/deep-research/deep-research.ts
+```ts demos/deep-research/deep-research.ts@4a7436b
 data: ({ context, event }) => ({
   round: context.round + 1,
   maxRounds: context.maxRounds,

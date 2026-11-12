@@ -11,6 +11,11 @@ prints. It records into `1/` unless `RECORD_DIR` names another directory.
 What a run holds of third parties is the driver's own queries and summaries and `{url, title}` citations.
 `search.results` carries only the query; hits never enter the record.
 
+Run 1 predates the demo dropping its two TypeSafe effects. In it the round budget was judged from the question and
+shown with its reason on the arrival that answers `brief.submit`, and the lead proposed 10 to 40 sub-tasks of which the
+machine picked some. The demo now has a fixed budget of 3 rounds and runs every sub-task the lead lists, at most 10, so
+`003`, `004` and the lead's `planning` and `researching` instructions read differently on a run driven today.
+
 ## 1: the Branson question
 
 - **Question:** *Where is the best place to take my kids fishing in Branson, MO?*

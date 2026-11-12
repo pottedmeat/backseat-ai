@@ -3,7 +3,6 @@ import { join } from 'node:path'
 import { assign } from 'xstate'
 import { z } from 'zod'
 import { backseat, collectChildren, scratchDir } from 'backseat-ai'
-import { judgeMaxRounds, pickSearches } from './judgments.ts'
 import { researchTask, type Source, type TaskReport } from './research-task.ts'
 
 // ---- the lead: decompose, dispatch a worker per sub-task, judge the round, draft and cite ---------------------------
@@ -38,8 +37,8 @@ type LeadContext = {
 }
 
 type LeadEvent =
-  | { type: 'brief.submit'; question: string; output: { rounds: number; budget: string } }
-  | { type: 'plan.submit'; subTasks: Array<{ subQuestion: string }>; output: string[] }
+  | { type: 'brief.submit'; question: string }
+  | { type: 'plan.submit'; subTasks: Array<{ subQuestion: string }> }
   | { type: 'task.next' }
   | { type: 'research.review' }
   | { type: 'round.again'; synthesis: string; gaps: string[] }
@@ -174,38 +173,27 @@ export const deepResearch = createMachine({
           target: 'planning',
           description: 'The question is stated.',
           schema: z.object({ question: z.string().min(10) }),
-          // The budget is judged from the question, not set by the lead: TypeSafe scores it from 1 to 10 rounds.
-          effect: ({ event }) => judgeMaxRounds(event.question),
-          actions: assign({
-            question: ({ event }) => event.question,
-            maxRounds: ({ event }) => event.output.rounds,
-          }),
+          actions: assign({ question: ({ event }) => event.question }),
         },
       },
     },
 
     planning: {
       description: 'The question is known; this round needs sub-tasks.',
-      // The round about to be planned and the budget TypeSafe judged for the question; once, on the arrival that
-      // answers `brief.submit`, why it is that many: the effect's output rides the event and is kept nowhere.
-      data: ({ context, event }) => ({
-        round: context.round + 1,
-        maxRounds: context.maxRounds,
-        ...(event?.type === 'brief.submit' && { budget: event.output.budget }),
-      }),
+      // The round about to be planned and the budget of rounds.
+      data: ({ context }) => ({ round: context.round + 1, maxRounds: context.maxRounds }),
       instructions: ({ visit }) =>
         visit === 'first'
           ? 'You are planning round `data.round` of at most `data.maxRounds`. Start broad: a first round maps the ' +
             'ground — which candidates, sources and angles exist — rather than trying to settle the answer, and ' +
-            'later rounds add depth aimed at what it turns up. List every sub-task you could commission this round, ' +
-            'exhaustively and at least 10: this machine picks which of them run and in what order, so do not trim ' +
-            'the list to the ones you would run yourself. Each must be self-contained: a worker ' +
+            'later rounds add depth aimed at what it turns up. List the sub-tasks to commission this round, at most ' +
+            '10: every one you list runs. Each must be self-contained: a worker ' +
             'sees the research question and its own sub-question, nothing else, and cannot ask you for ' +
             'clarification. State an objective and clear boundaries so two workers do not duplicate each other. ' +
             'Write every boundary in terms the worker can check alone: name the topic it must not cover, never ' +
             'point at another sub-task it cannot see.'
-          : 'You are planning round `data.round` of at most `data.maxRounds`. List every sub-task you could ' +
-            'commission, exhaustively and at least 10; this machine picks which run. Go deeper than the rounds ' +
+          : 'You are planning round `data.round` of at most `data.maxRounds`. List the sub-tasks to commission, at ' +
+            'most 10; every one you list runs. Go deeper than the rounds ' +
             'before it: aim each sub-task at the ' +
             'gaps you named and at the specific candidates or sources the earlier findings surfaced, naming them ' +
             'so a worker can check them alone, and ask for what the answer turns on to be confirmed at its ' +
@@ -216,17 +204,13 @@ export const deepResearch = createMachine({
           target: 'researching',
           description: 'The round has its sub-tasks.',
           schema: z.object({
-            // At most 40: each of TypeSafe's ten rank questions carries the whole list as its options.
-            subTasks: z.array(z.object({ subQuestion: z.string().min(10) })).min(10).max(40),
+            subTasks: z.array(z.object({ subQuestion: z.string().min(10) })).min(1).max(10),
           }),
-          // TypeSafe judges how many of the proposals to run (1 to 10) and ranks them; only those are dispatched.
-          effect: ({ context, event }) =>
-            pickSearches(context.question, context.round + 1, event.subTasks.map((t) => t.subQuestion)),
           actions: assign(({ context, event }) => ({
             round: context.round + 1,
             dispatched: 1,
-            pending: event.output.slice(1).map((subQuestion) => ({ subQuestion })),
-            current: event.output[0] ? { subQuestion: event.output[0] } : null,
+            pending: event.subTasks.slice(1),
+            current: event.subTasks[0] ?? null,
           })),
         },
       },
@@ -237,8 +221,7 @@ export const deepResearch = createMachine({
       // No `data`: the queue is the machine's, and the lead has nothing to act on until the round is in.
       instructions: ({ visit }) =>
         visit === 'first'
-          ? 'This machine picked which of your proposed sub-tasks run this round, and in what order; those not ' +
-            'picked are not run, and you may propose them again in a later round. For each one, spawn a subagent ' +
+          ? 'Every sub-task you listed runs this round, in the order you gave. For each one, spawn a subagent ' +
             'and tell it to run the listed command: each worker\'s searches and pages then stay out of your context, ' +
             'and the workers run side by side. Keep dispatching while another sub-task is offered, then wait until ' +
             'all of your subagents are complete before moving to review.'

@@ -236,7 +236,7 @@ lists it, and each child's driver learns the tool on its own first response.
 **After.** Start one each, give it the listed command, say why, and wait.
 
 ```ts demos/deep-research/deep-research.ts
-'picked are not run, and you may propose them again in a later round. For each one, spawn a subagent ' +
+'Every sub-task you listed runs this round, in the order you gave. For each one, spawn a subagent ' +
 'and tell it to run the listed command: each worker\'s searches and pages then stay out of your context, ' +
 'and the workers run side by side. Keep dispatching while another sub-task is offered, then wait until ' +
 'all of your subagents are complete before moving to review.'
