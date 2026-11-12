@@ -1,7 +1,7 @@
 # Craft lint can't check
 
-Seven rules for a machine an agent reads well, none of which `lint` can hold, because each needs judgement about prose
-or intent. `SKILL.md`'s review entry links each rule here by its heading. The four rules `lint` does check are in
+Ten rules for a machine an agent reads well, none of which `lint` can hold, because each needs judgement about prose,
+shape or intent. `SKILL.md`'s review entry links each rule here by its heading. The four rules `lint` does check are in
 `style.md`, and its findings explain themselves.
 
 Each gives the reviewer's question, the reason, a smell to search for, and a before and after. The before is
@@ -240,4 +240,102 @@ lists it, and each child's driver learns the tool on its own first response.
 'and tell it to run the listed command: each worker\'s searches and pages then stay out of your context, ' +
 'and the workers run side by side. Keep dispatching while another sub-task is offered, then wait until ' +
 'all of your subagents are complete before moving to review.'
+```
+
+## `say-it-to-keep-it`
+
+**What the agent states, it keeps; the machine needs no copy.**
+
+Reviewer's question: where the next stretch depends on something the agent worked out, does a contract make it state
+that first, and is the statement left unstored unless something reads it?
+
+**Reason.** A driver holds its whole conversation. A payload it sends stays there for the rest of the run, in the
+shape the schema forced, whether or not the machine writes it down. So a schema with no action is finished work: the
+contract made the agent settle what it thinks, and the settled version is now what it reads back when it acts. Read
+from the machine's side, where only context is in view, that value looks lost, and the step looks pointless. It is
+neither. Reach for a checkpoint wherever the agent would otherwise carry a loose impression into work that needs a
+firm one: the plan before the edits, the gaps before another round, the cause before the fix. Store a field only once
+a guard, a derived schema, `data` or another driver reads it (`style.md` § `store-nothing-unread`).
+
+**Smell.** A stretch of work whose instructions say "consider", "think about" or "keep in mind" with no schema that
+asks for the result. Or an `assign` on a field nothing reads, added so the transition would look complete.
+
+**Before.** Instructions that end "think about what the findings still leave open before you go on", over a
+transition that asks only for the synthesis. Or one that asks for the gaps too and adds
+`assign({ gaps: ({ event }) => event.gaps })`, which nothing reads.
+
+**After.** The gaps are in the contract and nowhere else.
+
+```ts demos/deep-research/deep-research.ts
+// `gaps` is stated, not stored: naming them is the price of another round, and nothing keeps them.
+schema: z.object({
+  synthesis: z.string().min(80),
+  gaps: z.array(z.string().min(10)).min(1),
+}),
+```
+
+The conversation is one driver's. A statement a different driver must read has to be kept and shown to it as `data`.
+
+## `one-state-per-arrival`
+
+**A state serves one arrival; a catch-all hub is several states.**
+
+Reviewer's question: can each state's instructions and `data` be written without asking which step just finished?
+
+**Reason.** A catch-all hub is a central state every step returns to, which then works out what to say and show from
+what came before. It costs twice. Its instructions and `data` must cover every arrival, so the agent reads material
+meant for other moments. And each feeding step must write what it produced, and that it was the one that ran, into
+context for the hub to sort out, so context fills with fields that exist only to be dispatched on. The transition that
+left the last state already knew where the work goes next. Target that state, and give it the instructions and `data`
+its own moment needs. The offered list is then the moves that fit, with nothing guarded on a `phase`.
+
+A state the workflow returns to is not a catch-all hub when the agent makes the same real choice there each time. Nor
+is a branch state left at once by `always`, which shows the agent nothing
+([Checking what an `assign` wrote](patterns.md#checking-what-an-assign-wrote)).
+
+**Smell.** A context field named `phase`, `step`, `stage` or `last…` that only guards and instructions read. An
+`instructions` or `data` function that branches on one. A state most others target, whose `data` returns what each of
+them produced.
+
+**Before.** One `citing` state for every arrival: its instructions open
+`context.lastOutcome === 'rejected' ? … : …`, and its `data` always returns `unquoted` and `unreported`, empty on the
+first pass. No demo is written this way, so there is nothing to quote.
+
+**After.** Two states. The first arrival is shown what it needs to cite, and a rejected submission lands somewhere
+that shows what to fix.
+
+```ts demos/deep-research/deep-research.ts
+data: ({ context: { draft, findings } }) => ({ draft, findings }),
+```
+
+```ts demos/deep-research/deep-research.ts
+data: ({ context: { draft, findings, unquoted, unreported } }) => ({ draft, findings, unquoted, unreported }),
+```
+
+## `share-only-what-is-needed`
+
+**Every value kept or shown has a reader that needs it there.**
+
+Reviewer's question: for each value the machine keeps, shows or passes on, can you name what reads it at that point,
+and would that reader miss it?
+
+**Reason.** Excess data is a smell wherever it sits. In context it rides in every snapshot and tells the next reader
+the machine depends on it. In `data` and `about` the agent reads past it on the way to what the decision needs, or
+acts on it. In a child's `input` or `output` it carries one driver's working state to another. `lint` holds two parts
+of this: a context field nothing reads (`style.md` § `store-nothing-unread`) and a `data` key the same driver already
+sent (`style.md` § `data-only-across-readers`). `keep-what-outlives-the-call` covers an effect's output. The rest is
+yours: at each surface, start from the reader and pass what it uses. A wide surface is often a sign of something
+else, a catch-all hub (`one-state-per-arrival`) or a statement stored for its own sake (`say-it-to-keep-it`), so fix
+that first.
+
+**Smell.** `data: ({ context }) => context`, or a spread of it. An `assign` that copies the whole event. `input` or
+`output` that hands over a whole context. A `data` key the state's instructions never mention.
+
+**Before.** `data: ({ context }) => context` on a state that works one query at a time, which shows the agent every
+query still queued and every result so far.
+
+**After.** The one query in hand.
+
+```ts demos/deep-research/research-task.ts
+data: ({ context: { current } }) => ({ current }),
 ```

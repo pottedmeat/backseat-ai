@@ -129,6 +129,11 @@ other is a spawn's [`about`](./subagents.md#about), and the rest of context stay
 data: ({ context: { current, items } }) => ({ current, remaining: items.length }),
 ```
 
+**Return what this state's decision needs.** Pick the fields out, as above, and leave the rest of context hidden.
+Whatever `data` returns is printed on every response from this state, so each extra field is one the agent reads past
+to reach the ones it needs. A value the same agent sent a call ago is already in its conversation and doesn't need
+showing again ([`style.md`](./style.md#data-only-across-readers)).
+
 **How it prints.** An object prints as one field per key, in the order written, under `## Data`. Each field is a line
 `- <key>: <type>` with the value under it. The type is the value's JavaScript kind (`string`, `number`, `boolean`,
 `null`, `array` or `object`). A scalar is printed as text, and an array or object as a fenced JSON block. A key whose
@@ -188,6 +193,12 @@ url: string // the pull request to review (uri)
 ```
 
 The payload is validated before any action runs, and a key the schema doesn't declare is dropped.
+
+**A schema with no action is complete.** Nothing has to store what a schema asks for. The agent keeps everything it
+sends in its own conversation, so a transition can ask for a value only to make the agent state it clearly before the
+work that depends on it: a plan before the edits, or the gaps before another round. The machine checks the statement
+and keeps nothing. Add an `assign` only when something later reads the field
+([`style.md`](./style.md#store-nothing-unread)).
 
 ## `effect`
 

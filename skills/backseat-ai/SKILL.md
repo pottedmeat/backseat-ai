@@ -47,6 +47,7 @@ docs are right.
 [`references/patterns.md`](references/patterns.md) holds the shapes the docs show only in pieces. Each says what it
 combines, why it's shaped that way, quotes a demo, and links the doc for each piece. Reach for one by name:
 
+- [Checkpoint](references/patterns.md#checkpoint)
 - [Fan-out round](references/patterns.md#fan-out-round)
 - [Splitting what was collected](references/patterns.md#splitting-what-was-collected)
 - [One contested event or two](references/patterns.md#one-contested-event-or-two)
@@ -59,14 +60,13 @@ combines, why it's shaped that way, quotes a demo, and links the doc for each pi
 - [Machine-to-machine output](references/patterns.md#machine-to-machine-output)
 - [Courier](references/patterns.md#courier)
 - [An effect that decides](references/patterns.md#an-effect-that-decides)
-- [Checkpoint](references/patterns.md#checkpoint)
 
 ## Review a machine
 
 1. Run `node cli.ts lint <machine>` from the project. Each finding names its rule in `style.md`; fix it, or weigh the
    rule's reason and say why it doesn't apply. Each check that **declines** names what it couldn't see: answer that
    check by hand (`style.md` § When every check declines).
-2. Answer the seven reviewer's questions, which `lint` can't check. Each links its rule in
+2. Answer the ten reviewer's questions, which `lint` can't check. Each links its rule in
    [`references/craft.md`](references/craft.md):
 
    - [`why-in-prose`](references/craft.md#why-in-prose): does every instruction say why the step is wanted, and leave
@@ -84,6 +84,13 @@ combines, why it's shaped that way, quotes a demo, and links the doc for each pi
    - [`say-how-children-are-driven`](references/craft.md#say-how-children-are-driven): do the first-visit
      instructions of every state that spawns say to start a subagent for each child listed, give it its command, wait
      for all of them, and why?
+   - [`say-it-to-keep-it`](references/craft.md#say-it-to-keep-it): where the next stretch depends on something the
+     agent worked out, does a contract make it state that first, and is the statement left unstored unless something
+     reads it?
+   - [`one-state-per-arrival`](references/craft.md#one-state-per-arrival): can each state's instructions and `data`
+     be written without asking which step just finished?
+   - [`share-only-what-is-needed`](references/craft.md#share-only-what-is-needed): for each value the machine keeps,
+     shows or passes on, can you name what reads it at that point, and would that reader miss it?
 
 The review is done when every finding is fixed or answered, every decline is answered by hand, and every question is
 answered yes or has a change behind it.
